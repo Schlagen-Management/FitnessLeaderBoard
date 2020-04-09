@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessLeaderBoard", "FitnessLeaderBoard\FitnessLeaderBoard.csproj", "{6C9422CB-5CF3-4FF0-91DE-6D5A7AAFA303}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C9422CB-5CF3-4FF0-91DE-6D5A7AAFA303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C9422CB-5CF3-4FF0-91DE-6D5A7AAFA303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C9422CB-5CF3-4FF0-91DE-6D5A7AAFA303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C9422CB-5CF3-4FF0-91DE-6D5A7AAFA303}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A221CFF9-4347-4777-A38A-A253E3A14ED2}
+	EndGlobalSection
+EndGlobal
