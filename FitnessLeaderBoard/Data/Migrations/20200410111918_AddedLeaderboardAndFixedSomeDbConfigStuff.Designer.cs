@@ -4,14 +4,16 @@ using FitnessLeaderBoard.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FitnessLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200410111918_AddedLeaderboardAndFixedSomeDbConfigStuff")]
+    partial class AddedLeaderboardAndFixedSomeDbConfigStuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +34,7 @@ namespace FitnessLeaderBoard.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("nvarchar")
                         .HasMaxLength(256);
 
                     b.Property<string>("Email")
@@ -43,7 +45,7 @@ namespace FitnessLeaderBoard.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("nvarchar")
                         .HasMaxLength(256);
 
                     b.Property<bool>("LockoutEnabled")
@@ -112,12 +114,12 @@ namespace FitnessLeaderBoard.Data.Migrations
 
                     b.Property<string>("NameToDisplay")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
+                        .HasColumnType("nvarchar")
                         .HasMaxLength(256);
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("nvarchar")
                         .HasMaxLength(450);
 
                     b.HasKey("LeaderboardId");
@@ -142,7 +144,7 @@ namespace FitnessLeaderBoard.Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("nvarchar")
                         .HasMaxLength(450);
 
                     b.HasKey("StepDataId");

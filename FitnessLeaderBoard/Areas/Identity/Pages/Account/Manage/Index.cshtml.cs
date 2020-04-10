@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using FitnessLeaderBoard.Data.EntityClasses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,12 +12,12 @@ namespace FitnessLeaderBoard.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<FlbUser> _userManager;
+        private readonly SignInManager<FlbUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<FlbUser> userManager,
+            SignInManager<FlbUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,18 +36,28 @@ namespace FitnessLeaderBoard.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "FullName")]
+            public string FullName { get; set; }
+
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(FlbUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var fullName = user.FullName;
+            var displayName = user.DisplayName;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FullName = user.FullName,
+                DisplayName = user.DisplayName
             };
         }
 
@@ -86,6 +97,14 @@ namespace FitnessLeaderBoard.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
+
+            if (Input.FullName != user.FullName)
+                user.FullName = Input.FullName;
+
+            if (Input.DisplayName != user.DisplayName)
+                user.DisplayName = Input.DisplayName;
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

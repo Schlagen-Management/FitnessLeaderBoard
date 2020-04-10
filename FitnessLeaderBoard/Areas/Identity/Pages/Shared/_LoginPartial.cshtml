@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@using FitnessLeaderBoard.Data.EntityClasses
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<FlbUser> SignInManager
+@inject UserManager<FlbUser> UserManager
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <ul class="navbar-nav">

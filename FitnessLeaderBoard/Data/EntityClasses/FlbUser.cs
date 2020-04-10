@@ -8,7 +8,9 @@ namespace FitnessLeaderBoard.Data.EntityClasses
 {
     public class FlbUser : IdentityUser
     {
+        [PersonalData]
         public string FullName { get; set; }
+        [PersonalData]
         public string DisplayName { get; set; }
     }
 }
