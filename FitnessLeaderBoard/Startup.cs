@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FitnessLeaderBoard.Areas.Identity;
 using FitnessLeaderBoard.Data;
+using FitnessLeaderBoard.Data.EntityClasses;
+using FitnessLeaderBoard.Services;
 
 namespace FitnessLeaderBoard
 {
@@ -34,7 +36,7 @@ namespace FitnessLeaderBoard
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<FlbUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication().AddFacebook(options =>
@@ -53,6 +55,8 @@ namespace FitnessLeaderBoard
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<StepDataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
