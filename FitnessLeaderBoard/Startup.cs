@@ -50,11 +50,10 @@ namespace FitnessLeaderBoard
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 options.CallbackPath = "/signin-google";
             }); ;
-            
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<FlbUser>>();
 
             services.AddScoped<StepDataService>();
             services.AddScoped<UserManager<FlbUser>>();

@@ -1,5 +1,6 @@
 ﻿using FitnessLeaderBoard.Data;
 using FitnessLeaderBoard.Data.EntityClasses;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,14 +64,14 @@ namespace FitnessLeaderBoard.Services
             // Count of last 7 days of steps
             var last7daysStepCount
                 = context.StepData.Where(sd => sd.UserId == userId
-                && sd.Date >= DateTime.Today.AddDays(-6).Date
+                && sd.Date >= DateTime.Today.AddDays(-7).Date
                 && sd.Date <= DateTime.Today.Date)
                 .Sum(sd => sd.StepCount);
 
             // Count of the last 30 days of steps
             var last30daysStepCount
                 = context.StepData.Where(sd => sd.UserId == userId
-                && sd.Date >= DateTime.Today.AddDays(-29).Date
+                && sd.Date >= DateTime.Today.AddDays(-30).Date
                 && sd.Date <= DateTime.Today.Date)
                 .Sum(sd => sd.StepCount);
 
@@ -110,6 +111,19 @@ namespace FitnessLeaderBoard.Services
             {
                 return false;
             }
+        }
+
+        public IQueryable<LeaderboardData> GetLeaderboard(int? quantity = null)
+        {
+            if (quantity.HasValue == false)
+                // Return all results
+                return context.Leaderboard
+                    .AsNoTracking();
+            else
+                // Only return the specified quantity
+                return context.Leaderboard
+                    .Take(quantity.Value)
+                    .AsNoTracking();
         }
     }
 }

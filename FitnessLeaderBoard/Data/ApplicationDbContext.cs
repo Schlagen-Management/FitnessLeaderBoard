@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FitnessLeaderBoard.Data.EntityClasses;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,9 +10,9 @@ namespace FitnessLeaderBoard.Data
 {
     public class ApplicationDbContext : IdentityDbContext<FlbUser>
     {
-        public IList<StepData> StepData { get; set; }
+        public DbSet<StepData> StepData { get; set; }
 
-        public IList<LeaderboardData> Leaderboard { get; set; }
+        public DbSet<LeaderboardData> Leaderboard { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
@@ -53,15 +54,6 @@ namespace FitnessLeaderBoard.Data
                 .IsRequired();
             builder.Entity<LeaderboardData>().Property(ld => ld.LastThirtyDaysStepCount)
                 .IsRequired();
-
-            SeedDevelopmentTestData(builder);
-        }
-
-        private void SeedDevelopmentTestData(ModelBuilder builder)
-        {
-#if DEBUG
-
-#endif
         }
     }
 }
