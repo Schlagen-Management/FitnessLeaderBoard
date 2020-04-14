@@ -1,218 +1,131 @@
-﻿@page "/"
-
-@using FitnessLeaderBoard.Data.EntityClasses
-@using FitnessLeaderBoard.Services
-@using Radzen.Blazor
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
-
-@inject StepDataService stepDataService
-@inject UserManager<FlbUser> userManager
-
+﻿
 <div class="row">
     <div class="col-lg-12 text-center">
-        <h2 class="mt-3">Walkathon Leaderboard</h2>
-        <p><small>Based on the Honor system. Please share your local steps with our community.</small></p>
+        <h1 class="h4 my-2">Fitness Leaderboard</h1>
     </div>
 </div>
+<hr>
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-3">
+        <!-- Left ad block visible on tablets and up -->
+        <AdBlockA />
+        <!-- end left ad block -->
+    </div>
+    <div class="col-sm-4 offset-sm-1">
         <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
-            <li class="nav-item"> <a class="nav-link active" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="true">Last 7 Days</a> </li>
-            <li class="nav-item"> <a class="nav-link" id="pills-alltime-tab" data-toggle="pill" href="#pills-alltime" role="tab" aria-controls="pills-alltime" aria-selected="false">Last 30 Days</a> </li>
+            <li class="nav-item"> <a class="nav-link active" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="true">THIS WEEK</a> </li>
+            <li class="nav-item"> <a class="nav-link" id="pills-alltime-tab" data-toggle="pill" href="#pills-alltime" role="tab" aria-controls="pills-alltime" aria-selected="false">ALL TIME</a> </li>
         </ul>
-        <div class="tab-content overflow-auto" id="pills-tabContent">
+        <div class="tab-content overflow-auto" id="pills-tab-content">
             <div class="tab-pane fade show active" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab">
-                <table class="table table-sm table-striped table-borderless">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Walker</th>
-                            <th scope="col">Steps</th>
-                        </tr>
-                    </thead>
+                <div class="container">
+                    <!-- This row houses the 3 top leaders (weekly view)-->
+                    <div class="row pb-3 top-three thiswk">
+                        <div class="col text-center runner-up">
+                            <div class="second"><span class="silver">2</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(2).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
+                            Name
+                        </div>
+                        <div class="col text-center">
+                            <!-- Template for users without avatar - uses settings from user profile page -->
+                            <div class="first"><span class="gold">1</span> <div class="md-avatar user-color rounded-circle size-2"><b>NA</b></div></div>
+                            No Avatar
+                        </div>
+                        <div class="col text-center runner-up">
+                            <div class="third"><span class="bronze">3</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(3).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
+                            Name
+                        </div>
+                    </div>
+                </div>
+                <!-- Ths section is available after login -->
+                <div class="row pb-3 myrank thiswk">
+                    <!-- With Avatar -->
+                    <div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>
+                    <!-- No Avatar just user settings -->
+                    <div class="col user-avatar">
+                        <div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div>
+                    </div>
+                    <div class="col user-stats">
+                        <span>Rank:</span> 54<br>
+                        <span>Steps:</span> 100.652
+                    </div>
+                    <div class="col user-settings"><a href="user.html" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
+                </div>
+                <!-- end available after login -->
+                <table class="table table-sm table-borderless">
                     <tbody>
-                        @if (leaderboardLastSevenDays == null)
-                        {
-                            <tr>
-                                <td colspan="3">
-                                    <p><em>Loading...</em></p>
-                                </td>
-                            </tr>
-                        }
-                        else if (leaderboardLastSevenDays.Count() == 0)
-                        {
-                            <tr>
-                                <td colspan="3">
-                                    <span>No walkers defined yet...</span>
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            int count = 1;
-                            foreach (var walker in leaderboardLastSevenDays)
-                            {
-                                <tr>
-                                    <td scope="row">@count</td>
-                                    <td>@walker.NameToDisplay</td>
-                                    <td>@walker.LastSevenDaysStepCount</td>
-                                </tr>
-
-                                count++;
-                            }
-                        }
+                        <tr>
+                            <!-- This row as template for users without avatar - uses settings from user profile page -->
+                            <th class="align-middle" scope="row">4</th>
+                            <td class="align-middle"><div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div></td>
+                            <td class="align-middle">No Avatar</td>
+                            <td class="align-middle">100,001</td>
+                        </tr>
+                        <tr>
+                            <!-- This row as template for users that have a facebook avatar -->
+                            <th class="align-middle" scope="row">5</th>
+                            <td class="align-middle"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(6).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></td>
+                            <td class="align-middle">Name</td>
+                            <td class="align-middle">10,001</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="tab-pane fade" id="pills-alltime" role="tabpanel" aria-labelledby="pills-alltime-tab">
-                <table class="table table-sm table-striped table-borderless">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Walker</th>
-                            <th scope="col">Steps</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (leaderboardLast30Days == null)
-                        {
-                            <tr>
-                                <td colspan="3">
-                                    <p><em>Loading...</em></p>
-                                </td>
-                            </tr>
-                        }
-                        else if (leaderboardLast30Days.Count() == 0)
-                        {
-                            <tr>
-                                <td colspan="3">
-                                    <span>No walkers defined yet...</span>
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            int count = 1;
-                            foreach (var walker in leaderboardLast30Days)
-                            {
-                                <tr>
-                                    <td scope="row">@count</td>
-                                    <td>@walker.NameToDisplay</td>
-                                    <td>@walker.LastThirtyDaysStepCount</td>
-                                </tr>
+                <div class="container">
+                    <!-- This row houses the 3 top leaders (all time view)-->
+                    <div class="row pb-3 top-three thiswk">
+                        <div class="col text-center runner-up">
+                            <div class="second"><span class="silver">2</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(3).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
+                            Name
+                        </div>
+                        <div class="col text-center">
+                            <div class="first"><span class="gold">1</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(30).jpg" alt="Avatar" class="md-avatar rounded-circle size-2"></div>
+                            Name
+                        </div>
+                        <div class="col text-center runner-up">
+                            <div class="third"><span class="bronze">3</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(31).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
+                            Name
+                        </div>
+                    </div>
+                </div>
+                <!-- Ths section is available after login -->
+                <div class="row pb-3 myrank alltime">
+                    <div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>
+                    <div class="col user-stats">
+                        <span>Rank:</span> 1420<br>
+                        <span>Steps:</span> 1,000.525
+                    </div>
+                    <div class="col user-settings"><a href="user.html" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
+                </div>
+                <!-- end available after login -->
 
-                                count++;
-                            }
-                        }
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        <tr>
+                            <!-- This row as template for users without avatar - uses settings from user profile page -->
+                            <th class="align-middle" scope="row">4</th>
+                            <td class="align-middle"><div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div></td>
+                            <td class="align-middle">No Avatar</td>
+                            <td class="align-middle">100,001</td>
+                        </tr>
+                        <tr>
+                            <!-- This row as template for users that have a facebook avatar -->
+                            <th class="align-middle" scope="row">5</th>
+                            <td class="align-middle"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(6).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></td>
+                            <td class="align-middle">Name</td>
+                            <td class="align-middle">10,001</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <AuthorizeView>
-            <Authorized>
-                <div class="text-center mt-4">
-                    <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
-                </div>
-                <div class="text-center mt-4">
-                    <RadzenRadioButtonList TValue="int" @bind-Value="@daySelection">
-                        <Items>
-                            <RadzenRadioButtonListItem Text="Yesterday" Value="-1" />
-                            <RadzenRadioButtonListItem Text="Today" Value="0" />
-                        </Items>
-                    </RadzenRadioButtonList>
-                </div>
-                <div class="text-center mt-4">
-                    <Radzen.Blazor.RadzenNumeric TValue="int" @bind-Value="@dailySteps" />
-                    <button class="btn btn-primary btn-sm" @onclick="@AddSteps">Add Steps</button>
-                </div>
-                <div class="text-center mt-4">
-                    <a href="Identity/Account/LogOut" class="btn btn-primary btn-sm">SIGN OUT</a>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="text-center mt-4">
-                    <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+        <div class="text-center my-3"> <a href="signin.html" class="btn btn-primary btn-sm">SIGN IN</a> </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-3 offset-sm-1">
+        <!-- Right ad block visible on tablets and up -->
         <AdBlockA />
+        <!-- end right ad block-->
+        <!-- Ad space visible on phones only - we could rotate ads on screen changes or on a timer -->
+        <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div>
     </div>
 </div>
-<div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement">
-    <p> Advertisement Here</p>
-</div>
-
-@code {
-    [CascadingParameter]
-    private Task<AuthenticationState> authStateTask { get; set; }
-
-    // The logged in user's user Id
-    private string userId;
-
-    // The selected day to enter steps for, default to tody
-    int daySelection { get; set; } = 2;
-
-    // The steps to enter for the day
-    private int dailySteps { get; set; } = 0;
-
-    // the leaderboard
-    private List<LeaderboardData> leaderboardLastSevenDays { get; set; }
-
-    private List<LeaderboardData> leaderboardLast30Days { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        // Get the user Id
-        var authState = await authStateTask;
-        userId = authState.User.Identity.IsAuthenticated
-            ? userManager.GetUserId(authState.User)
-            : string.Empty;
-
-        // If the user is authenticated, retrieve info
-        if (authState.User.Identity.IsAuthenticated
-            && !string.IsNullOrEmpty(userId))
-        {
-        }
-
-        // Get the leaderboard for the last 7 days
-        leaderboardLastSevenDays
-            = await stepDataService.GetLeaderboard(10)
-            .OrderByDescending(lb => lb.LastSevenDaysStepCount)
-            .ToListAsync();
-
-        // Get the leaderboard for the last 30 days
-        leaderboardLast30Days
-            = await stepDataService.GetLeaderboard(10)
-            .OrderByDescending(lb => lb.LastThirtyDaysStepCount)
-            .ToListAsync();
-    }
-
-    private async Task AddSteps()
-    {
-        DateTime date = DateTime.Today.AddDays(daySelection).Date;
-
-        if (await stepDataService.AddUserStepDataForDate(userId, date, dailySteps))
-        {
-            // Get the updated leaderboard
-            leaderboardLastSevenDays
-                = await stepDataService.GetLeaderboard(10)
-                .OrderByDescending(lb => lb.LastSevenDaysStepCount)
-                .ToListAsync();
-
-            leaderboardLast30Days
-                = await stepDataService.GetLeaderboard(10)
-                .OrderByDescending(lb => lb.LastThirtyDaysStepCount)
-                .ToListAsync();
-        }
-
-        // Reset the fields
-        dailySteps = 0;
-        daySelection = 0;
-
-        // Refresh the display
-        StateHasChanged();
-    }
-}
