@@ -1,0 +1,225 @@
+﻿@page "/"
+
+@using FitnessLeaderBoard.Data.EntityClasses
+@using FitnessLeaderBoard.Services
+@using Radzen.Blazor
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@inject StepDataService stepDataService
+@inject UserManager<FlbUser> userManager
+
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <h2 class="mt-3">Walkathon Leaderboard</h2>
+        <p><small>Based on the Honor system. Please share your local steps with our community.</small></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        <!-- R ad block visible on tablets and up -->
+        <AdBlockA />
+        <!-- end right ad block-->
+    </div>
+    <div class="col-sm-4 offset-sm-1">
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+            <li class="nav-item"> <a class="nav-link active" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="true">Last 7 Days</a> </li>
+            <li class="nav-item"> <a class="nav-link" id="pills-alltime-tab" data-toggle="pill" href="#pills-alltime" role="tab" aria-controls="pills-alltime" aria-selected="false">Last 30 Days</a> </li>
+        </ul>
+        <div class="tab-content overflow-auto" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab">
+                <table class="table table-sm table-striped table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Walker</th>
+                            <th scope="col">Steps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (leaderboardLastSevenDays == null)
+                        {
+                            <tr>
+                                <td colspan="3">
+                                    <p><em>Loading...</em></p>
+                                </td>
+                            </tr>
+                        }
+                        else if (leaderboardLastSevenDays.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="3">
+                                    <span>No walkers defined yet...</span>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int count = 1;
+                            foreach (var walker in leaderboardLastSevenDays)
+                            {
+                                <tr>
+                                    <td scope="row">@count</td>
+                                    <td>@walker.NameToDisplay</td>
+                                    <td>@walker.LastSevenDaysStepCount</td>
+                                </tr>
+
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="pills-alltime" role="tabpanel" aria-labelledby="pills-alltime-tab">
+                <table class="table table-sm table-striped table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Walker</th>
+                            <th scope="col">Steps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (leaderboardLast30Days == null)
+                        {
+                            <tr>
+                                <td colspan="3">
+                                    <p><em>Loading...</em></p>
+                                </td>
+                            </tr>
+                        }
+                        else if (leaderboardLast30Days.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="3">
+                                    <span>No walkers defined yet...</span>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            int count = 1;
+                            foreach (var walker in leaderboardLast30Days)
+                            {
+                                <tr>
+                                    <td scope="row">@count</td>
+                                    <td>@walker.NameToDisplay</td>
+                                    <td>@walker.LastThirtyDaysStepCount</td>
+                                </tr>
+
+                                count++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="text-center mt-4">
+                    <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+                </div>
+                <div class="text-center mt-4">
+                    <RadzenRadioButtonList TValue="int" @bind-Value="@daySelection">
+                        <Items>
+                            <RadzenRadioButtonListItem Text="Yesterday" Value="-1" />
+                            <RadzenRadioButtonListItem Text="Today" Value="0" />
+                        </Items>
+                    </RadzenRadioButtonList>
+                </div>
+                <div class="text-center mt-4">
+                    <Radzen.Blazor.RadzenNumeric TValue="int" @bind-Value="@dailySteps" />
+                    <button class="btn btn-primary btn-sm" @onclick="@AddSteps">Add Steps</button>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="Identity/Account/LogOut" class="btn btn-primary btn-sm">SIGN OUT</a>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="text-center mt-4">
+                    <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+    <div class="col-sm-3 offset-sm-1">
+        <!-- Right ad block visible on tablets and up -->
+        <AdBlockA />
+        <!-- end right ad block-->
+    </div>
+</div>
+<div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement">
+    <p> Advertisement Here</p>
+</div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authStateTask { get; set; }
+
+    // The logged in user's user Id
+    private string userId;
+
+    // The selected day to enter steps for, default to tody
+    int daySelection { get; set; } = 2;
+
+    // The steps to enter for the day
+    private int dailySteps { get; set; } = 0;
+
+    // the leaderboard
+    private List<LeaderboardData> leaderboardLastSevenDays { get; set; }
+
+    private List<LeaderboardData> leaderboardLast30Days { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the user Id
+        var authState = await authStateTask;
+        userId = authState.User.Identity.IsAuthenticated
+            ? userManager.GetUserId(authState.User)
+            : string.Empty;
+
+        // If the user is authenticated, retrieve info
+        if (authState.User.Identity.IsAuthenticated
+            && !string.IsNullOrEmpty(userId))
+        {
+        }
+
+        // Get the leaderboard for the last 7 days
+        leaderboardLastSevenDays
+            = await stepDataService.GetLeaderboard(10)
+            .OrderByDescending(lb => lb.LastSevenDaysStepCount)
+            .ToListAsync();
+
+        // Get the leaderboard for the last 30 days
+        leaderboardLast30Days
+            = await stepDataService.GetLeaderboard(10)
+            .OrderByDescending(lb => lb.LastThirtyDaysStepCount)
+            .ToListAsync();
+    }
+
+    private async Task AddSteps()
+    {
+        DateTime date = DateTime.Today.AddDays(daySelection).Date;
+
+        if (await stepDataService.AddUserStepDataForDate(userId, date, dailySteps))
+        {
+            // Get the updated leaderboard
+            leaderboardLastSevenDays
+                = await stepDataService.GetLeaderboard(10)
+                .OrderByDescending(lb => lb.LastSevenDaysStepCount)
+                .ToListAsync();
+
+            leaderboardLast30Days
+                = await stepDataService.GetLeaderboard(10)
+                .OrderByDescending(lb => lb.LastThirtyDaysStepCount)
+                .ToListAsync();
+        }
+
+        // Reset the fields
+        dailySteps = 0;
+        daySelection = 0;
+
+        // Refresh the display
+        StateHasChanged();
+    }
+}
