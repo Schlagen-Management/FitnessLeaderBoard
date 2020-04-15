@@ -17,6 +17,7 @@ using FitnessLeaderBoard.Areas.Identity;
 using FitnessLeaderBoard.Data;
 using FitnessLeaderBoard.Data.EntityClasses;
 using FitnessLeaderBoard.Services;
+using System.Net.Http;
 
 namespace FitnessLeaderBoard
 {

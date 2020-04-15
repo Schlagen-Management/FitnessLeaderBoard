@@ -1,4 +1,15 @@
-﻿
+﻿@page "/"
+
+@using FitnessLeaderBoard.Data.EntityClasses
+@using FitnessLeaderBoard.Services
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.Extensions.Logging
+
+@inject StepDataService stepDataService
+@inject UserManager<FlbUser> userManager
+@inject ILogger<Index> logger
+
 <div class="row">
     <div class="col-lg-12 text-center">
         <h1 class="h4 my-2">Fitness Leaderboard</h1>
@@ -18,108 +29,208 @@
         </ul>
         <div class="tab-content overflow-auto" id="pills-tab-content">
             <div class="tab-pane fade show active" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab">
-                <div class="container">
-                    <!-- This row houses the 3 top leaders (weekly view)-->
-                    <div class="row pb-3 top-three thiswk">
-                        <div class="col text-center runner-up">
-                            <div class="second"><span class="silver">2</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(2).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
-                            Name
-                        </div>
-                        <div class="col text-center">
-                            <!-- Template for users without avatar - uses settings from user profile page -->
-                            <div class="first"><span class="gold">1</span> <div class="md-avatar user-color rounded-circle size-2"><b>NA</b></div></div>
-                            No Avatar
-                        </div>
-                        <div class="col text-center runner-up">
-                            <div class="third"><span class="bronze">3</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(3).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
-                            Name
+                @if (leaderboardLastSevenDays == null || leaderboardLastSevenDays.Count() == 0)
+                {
+                    <div class="container">
+                        No walkers currently registered
+                    </div>
+                }
+                @if (leaderboardLastSevenDays != null && leaderboardLastSevenDays.Count() > 0)
+                {
+                    <div class="container">
+                        <!-- This row houses the 3 top leaders (weekly view)-->
+                        <div class="row pb-3 top-three thiswk">
+                            @if (leaderboardLastSevenDays.Count() > 1)
+                            {
+                                <div class="col text-center runner-up">
+                                    <div class="second">
+                                        <span class="silver">2</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardLastSevenDays[1].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardLastSevenDays[1].NameToDisplay
+                                </div>
+                            }
+                            @if (leaderboardLastSevenDays.Count() > 0)
+                            {
+                                <div class="col text-center">
+                                    <div class="first">
+                                        <span class="gold">1</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardLastSevenDays[0].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardLastSevenDays[0].NameToDisplay
+                                </div>
+                            }
+                            @if (leaderboardLastSevenDays.Count > 2)
+                            {
+                                <div class="col text-center runner-up">
+                                    <div class="third">
+                                        <span class="bronze">3</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardLastSevenDays[2].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardLastSevenDays[2].NameToDisplay
+                                </div>
+                            }
                         </div>
                     </div>
-                </div>
-                <!-- Ths section is available after login -->
-                <div class="row pb-3 myrank thiswk">
-                    <!-- With Avatar -->
-                    <div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>
-                    <!-- No Avatar just user settings -->
-                    <div class="col user-avatar">
-                        <div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div>
+                }
+
+                @if (userInfo != null)
+                {
+                    <!-- Ths section is available after login -->
+                    <div class="row pb-3 myrank thiswk">
+                        <!-- With Avatar -->
+                        @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
+                        <!-- No Avatar just user settings -->
+                        <div class="col user-avatar">
+                            <div class="md-avatar user-color rounded-circle size-1"><b>@userInfo.Initials</b></div>
+                        </div>
+                        <div class="col user-stats">
+                            <span>Rank:</span>@usersLast7DaysRank<br>
+                            <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
+                            <a href="UserProfile">Add Steps</a>
+                        </div>
+                        <div class="col user-settings">
+                            <a href="Identity/Account/Manage" class="btn btn-link">
+                                <i class="fa fa-gear"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col user-stats">
-                        <span>Rank:</span> 54<br>
-                        <span>Steps:</span> 100.652
-                    </div>
-                    <div class="col user-settings"><a href="user.html" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
-                </div>
-                <!-- end available after login -->
-                <table class="table table-sm table-borderless">
-                    <tbody>
-                        <tr>
-                            <!-- This row as template for users without avatar - uses settings from user profile page -->
-                            <th class="align-middle" scope="row">4</th>
-                            <td class="align-middle"><div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div></td>
-                            <td class="align-middle">No Avatar</td>
-                            <td class="align-middle">100,001</td>
-                        </tr>
-                        <tr>
-                            <!-- This row as template for users that have a facebook avatar -->
-                            <th class="align-middle" scope="row">5</th>
-                            <td class="align-middle"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(6).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></td>
-                            <td class="align-middle">Name</td>
-                            <td class="align-middle">10,001</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <!-- end available after login -->
+                }
+
+                @if (leaderboardLastSevenDays != null && leaderboardLastSevenDays.Count() > 3)
+                {
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            @for (var index = 3; index < leaderboardLastSevenDays.Count(); index++)
+                            {
+                                <tr>
+                                    <!-- This row as template for users without avatar - uses settings from user profile page -->
+                                    <th class="align-middle" scope="row">@index</th>
+                                    <td class="align-middle">
+                                        <div class="md-avatar user-color rounded-circle size-1">
+                                            <b>@leaderboardLastSevenDays[index].Initials</b>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">@leaderboardLastSevenDays[index].NameToDisplay</td>
+                                    <td class="align-middle">@leaderboardLastSevenDays[index].LastSevenDaysStepCount</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
             </div>
             <div class="tab-pane fade" id="pills-alltime" role="tabpanel" aria-labelledby="pills-alltime-tab">
-                <div class="container">
-                    <!-- This row houses the 3 top leaders (all time view)-->
-                    <div class="row pb-3 top-three thiswk">
-                        <div class="col text-center runner-up">
-                            <div class="second"><span class="silver">2</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(3).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
-                            Name
-                        </div>
-                        <div class="col text-center">
-                            <div class="first"><span class="gold">1</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(30).jpg" alt="Avatar" class="md-avatar rounded-circle size-2"></div>
-                            Name
-                        </div>
-                        <div class="col text-center runner-up">
-                            <div class="third"><span class="bronze">3</span> <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(31).jpg" alt="Avatar" class="md-avatar rounded-circle"></div>
-                            Name
+                @if (leaderboardAllTime == null || leaderboardAllTime.Count() == 0)
+                {
+                    <div class="container">
+                        No walkers currently registered
+                    </div>
+                }
+                @if (leaderboardAllTime != null && leaderboardAllTime.Count() > 0)
+                {
+                    <div class="container">
+                        <!-- This row houses the 3 top leaders (all time view)-->
+                        <div class="row pb-3 top-three thiswk">
+                            @if (leaderboardAllTime.Count() > 1)
+                            {
+                                <div class="col text-center runner-up">
+                                    <div class="second">
+                                        <span class="silver">2</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardAllTime[1].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardAllTime[1].NameToDisplay
+                                </div>
+                            }
+                            @if (leaderboardAllTime.Count() > 0)
+                            {
+                                <div class="col text-center">
+                                    <div class="first">
+                                        <span class="gold">1</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardAllTime[0].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardAllTime[0].NameToDisplay
+                                </div>
+                            }
+                            @if (leaderboardAllTime.Count > 2)
+                            {
+                                <div class="col text-center runner-up">
+                                    <div class="third">
+                                        <span class="bronze">3</span>
+                                        <div class="md-avatar user-color rounded-circle size-2">
+                                            <b>@leaderboardAllTime[2].Initials</b>
+                                        </div>
+                                    </div>
+                                    @leaderboardAllTime[2].NameToDisplay
+                                </div>
+                            }
                         </div>
                     </div>
-                </div>
-                <!-- Ths section is available after login -->
-                <div class="row pb-3 myrank alltime">
-                    <div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>
-                    <div class="col user-stats">
-                        <span>Rank:</span> 1420<br>
-                        <span>Steps:</span> 1,000.525
-                    </div>
-                    <div class="col user-settings"><a href="user.html" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
-                </div>
-                <!-- end available after login -->
+                }
 
-                <table class="table table-sm table-borderless">
-                    <tbody>
-                        <tr>
-                            <!-- This row as template for users without avatar - uses settings from user profile page -->
-                            <th class="align-middle" scope="row">4</th>
-                            <td class="align-middle"><div class="md-avatar user-color rounded-circle size-1"><b>NA</b></div></td>
-                            <td class="align-middle">No Avatar</td>
-                            <td class="align-middle">100,001</td>
-                        </tr>
-                        <tr>
-                            <!-- This row as template for users that have a facebook avatar -->
-                            <th class="align-middle" scope="row">5</th>
-                            <td class="align-middle"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(6).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></td>
-                            <td class="align-middle">Name</td>
-                            <td class="align-middle">10,001</td>
-                        </tr>
-                    </tbody>
-                </table>
+                @if (userInfo != null)
+                {
+                    <!-- Ths section is available after login -->
+                    <div class="row pb-3 myrank alltime">
+                        <!-- With Avatar -->
+                        @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
+                        <!-- No Avatar just user settings -->
+                        <div class="col user-avatar">
+                            <div class="md-avatar user-color rounded-circle size-1"><b>@userInfo.Initials</b></div>
+                        </div>
+                        <div class="col user-stats">
+                            <span>Rank:</span>@usersAllTimeRank<br>
+                            <span>Steps:</span> @userInfo.AllTimeStepCount
+                        </div>
+                        <div class="col user-settings"><a href="Identity/Account/Manage" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
+                    </div>
+                    <!-- end available after login -->
+                }
+
+                @if (leaderboardAllTime != null && leaderboardAllTime.Count() > 3)
+                {
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            @for (var index = 3; index < leaderboardAllTime.Count(); index++)
+                            {
+                                <tr>
+                                    <!-- This row as template for users without avatar - uses settings from user profile page -->
+                                    <th class="align-middle" scope="row">@index</th>
+                                    <td class="align-middle">
+                                        <div class="md-avatar user-color rounded-circle size-1">
+                                            <b>@leaderboardAllTime[index].Initials</b>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">@leaderboardAllTime[index].NameToDisplay</td>
+                                    <td class="align-middle">@leaderboardAllTime[index].AllTimeStepCount</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
-        <div class="text-center my-3"> <a href="signin.html" class="btn btn-primary btn-sm">SIGN IN</a> </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="text-center my-3"> <a href="Identity/Account/Logout" class="btn btn-primary btn-sm">SIGN OUT</a> </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="text-center my-3"> <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a> </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
     <div class="col-sm-3 offset-sm-1">
         <!-- Right ad block visible on tablets and up -->
@@ -129,3 +240,60 @@
         <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div>
     </div>
 </div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authStateTask { get; set; }
+
+    // The logged in user's user Id
+    private string userId;
+
+    // the leaderboard
+    private List<LeaderboardData> leaderboardLastSevenDays { get; set; }
+
+    private List<LeaderboardData> leaderboardAllTime { get; set; }
+
+    private int usersLast7DaysRank { get; set; }
+
+    private int usersAllTimeRank { get; set; }
+
+    private LeaderboardData userInfo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the user Id
+        var authState = await authStateTask;
+        userId = authState.User.Identity.IsAuthenticated
+            ? userManager.GetUserId(authState.User)
+            : string.Empty;
+
+        // If the user is authenticated, retrieve info
+        if (authState.User.Identity.IsAuthenticated
+            && !string.IsNullOrEmpty(userId))
+        {
+        }
+
+        // Get the leaderboard for the last 7 days
+        leaderboardLastSevenDays
+            = await stepDataService.GetLeaderboard(10)
+            .OrderByDescending(lb => lb.LastSevenDaysStepCount)
+            .ToListAsync();
+
+        // Get the leaderboard for the last 30 days
+        leaderboardAllTime
+            = await stepDataService.GetLeaderboard(10)
+            .OrderByDescending(lb => lb.AllTimeStepCount)
+            .ToListAsync();
+
+        usersLast7DaysRank
+            = await stepDataService.GetUsersRank(userId,
+            StepDataService.StepCountType.SevenDayStepCount);
+
+        usersAllTimeRank
+            = await stepDataService.GetUsersRank(userId,
+            StepDataService.StepCountType.AllTimeStepCount);
+
+        userInfo
+            = await stepDataService.GetUserLeaderboardInfo(userId);
+    }
+}

@@ -1,4 +1,16 @@
-﻿<div class="row">
+﻿@page "/UserProfile"
+
+@using FitnessLeaderBoard.Data.EntityClasses
+@using FitnessLeaderBoard.Services
+@using FitnessLeaderBoard.Components
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
+
+@inject StepDataService stepDataService
+@inject UserManager<FlbUser> userManager
+@inject NavigationManager navigationManager
+
+<div class="row">
     <div class="col-lg-12 text-center">
         <h1 class="h4 my-2">Profile</h1>
     </div>
@@ -12,19 +24,28 @@
     </div>
     <div class="col-sm-4 offset-sm-1">
         <div class="user-profile">
-            <form action="#" method="post">
+            <EditForm Model="@userInput" OnValidSubmit="@AddSteps">
+                <DataAnnotationsValidator />
+
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Username" required="required">
+                    <label for="selectDay">Select Day</label>
+                    <InputSelectNumber id="selectDay" class="form-control"
+                                       @bind-Value="@userInput.SelectedDay">
+                        <option value="-1">Yesterday</option>
+                        <option value="0" selected>Today</option>
+                    </InputSelectNumber>
                 </div>
                 <div class="form-group">
-                    <label for="steps">Steps Taken</label>
-                    <input type="password" class="form-control" name="steps" placeholder="Enter Steps" required="required">
+                    <label for="stepsTaken">Steps Taken</label>
+                    <InputNumber TValue="int" id="stepsTaken" class="form-control"
+                                 @bind-Value="@userInput.StepsTaken" />
+                    <ValidationMessage For="@(() => userInput.StepsTaken)" />
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" 
+                            @onclick="@AddSteps">Add Steps</button>
                 </div>
-            </form>
+            </EditForm>
         </div>
     </div>
     <div class="col-sm-3 offset-sm-1">
@@ -34,3 +55,54 @@
         <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div>
     </div>
 </div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>
+    authStateTask
+    { get; set; }
+
+    public class StepInputModel
+    {
+        [Required]
+        public int SelectedDay { get; set; }
+
+        [Required]
+        public int StepsTaken { get; set; }
+    }
+
+    // The logged in user's user Id
+    private string userId;
+
+    private IDictionary<int, string> availableDays { get; set; }
+        = new Dictionary<int, string>() { { -1, "Yesterday" }, { 0, "Today" } };
+
+    private StepInputModel userInput { get; set; }
+        = new StepInputModel { SelectedDay = 0, StepsTaken = 0 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the user Id
+        var authState = await authStateTask;
+        userId = authState.User.Identity.IsAuthenticated
+            ? userManager.GetUserId(authState.User)
+            : string.Empty;
+
+        // If the user is authenticated, retrieve info
+        if (authState.User.Identity.IsAuthenticated
+            && !string.IsNullOrEmpty(userId))
+        {
+        }
+    }
+
+    private async Task AddSteps()
+    {
+        DateTime date = DateTime.Today.AddDays(userInput.SelectedDay).Date;
+
+        if (await stepDataService.AddUserStepDataForDate(userId, date, userInput.StepsTaken))
+        {
+            // Navigate back to the home page
+            navigationManager.NavigateTo("/", true);
+        }
+    }
+}
