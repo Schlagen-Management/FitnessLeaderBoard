@@ -34,9 +34,16 @@ namespace FitnessLeaderBoard
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            if (Environment.GetEnvironmentVariable("DATABASE_ENVIRONMENT") == "Production")
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                    Configuration.GetConnectionString("ProdConnection")));
+            else
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                    Configuration.GetConnectionString("DevConnection")));
+
+
             services.AddDefaultIdentity<FlbUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -58,6 +65,8 @@ namespace FitnessLeaderBoard
 
             services.AddScoped<StepDataService>();
             services.AddScoped<UserManager<FlbUser>>();
+
+            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

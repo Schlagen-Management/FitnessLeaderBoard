@@ -62,17 +62,8 @@ namespace FitnessLeaderBoard.Services
                         .FirstOrDefault();
 
                     // Compute the initials
-                    List<string> allInitials
-                        = nameToDisplay.Split(" ").Select(n => n.Substring(0, 1)).ToList();
-                    string initials = string.Empty;
-                    for (var index = 0; index < allInitials.Count(); index++)
-                    {
-                        if (index == 0)
-                            initials += allInitials[index];
-
-                        if (index > 0 && index == allInitials.Count() - 1)
-                            initials += allInitials[index];
-                    }
+                    var initials
+                        = ConvertNameToInitials(nameToDisplay);
 
                     // Count of last 7 days of steps
                     var last7daysStepCount
@@ -206,6 +197,25 @@ namespace FitnessLeaderBoard.Services
         {
             return await context.Leaderboard.FirstOrDefaultAsync(
                 lb => lb.UserId == userId);
+        }
+
+        public string ConvertNameToInitials(string name)
+        {
+
+            // Compute the initials
+            List<string> allInitials
+                = name.Split(" ").Select(n => n.Substring(0, 1)).ToList();
+            string initials = string.Empty;
+            for (var index = 0; index < allInitials.Count(); index++)
+            {
+                if (index == 0)
+                    initials += allInitials[index];
+
+                if (index > 0 && index == allInitials.Count() - 1)
+                    initials += allInitials[index];
+            }
+
+            return initials;
         }
     }
 }

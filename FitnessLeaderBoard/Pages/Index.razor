@@ -271,29 +271,43 @@
         if (authState.User.Identity.IsAuthenticated
             && !string.IsNullOrEmpty(userId))
         {
+            usersLast7DaysRank
+                = await stepDataService.GetUsersRank(userId,
+                StepDataService.StepCountType.SevenDayStepCount);
+
+            usersAllTimeRank
+                = await stepDataService.GetUsersRank(userId,
+                StepDataService.StepCountType.AllTimeStepCount);
+
+            userInfo
+                = await stepDataService.GetUserLeaderboardInfo(userId);
+            if (userInfo == null)
+            {
+                userInfo = new LeaderboardData
+                {
+                    UserId = userId,
+                    NameToDisplay = authState.User.Identity.Name,
+                    Initials
+                        = stepDataService
+                        .ConvertNameToInitials(authState.User.Identity.Name),
+                DailyStepCount = 0,
+                    LastSevenDaysStepCount = 0,
+                    LastThirtyDaysStepCount = 0,
+                    AllTimeStepCount = 0
+                };
         }
+    }
 
-        // Get the leaderboard for the last 7 days
-        leaderboardLastSevenDays
-            = await stepDataService.GetLeaderboard(10)
-            .OrderByDescending(lb => lb.LastSevenDaysStepCount)
-            .ToListAsync();
+    // Get the leaderboard for the last 7 days
+    leaderboardLastSevenDays
+        = await stepDataService.GetLeaderboard(10)
+        .OrderByDescending(lb => lb.LastSevenDaysStepCount)
+        .ToListAsync();
 
-        // Get the leaderboard for the last 30 days
-        leaderboardAllTime
+    // Get the leaderboard for the last 30 days
+    leaderboardAllTime
             = await stepDataService.GetLeaderboard(10)
             .OrderByDescending(lb => lb.AllTimeStepCount)
             .ToListAsync();
-
-        usersLast7DaysRank
-            = await stepDataService.GetUsersRank(userId,
-            StepDataService.StepCountType.SevenDayStepCount);
-
-        usersAllTimeRank
-            = await stepDataService.GetUsersRank(userId,
-            StepDataService.StepCountType.AllTimeStepCount);
-
-        userInfo
-            = await stepDataService.GetUserLeaderboardInfo(userId);
-    }
+}
 }

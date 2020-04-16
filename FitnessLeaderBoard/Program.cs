@@ -20,24 +20,24 @@ namespace FitnessLeaderBoard
         {
             var host = CreateHostBuilder(args).Build();
 
-            var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var dbContext
-                    = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//#if DEBUG
+//            var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
+//            using (var scope = scopeFactory.CreateScope())
+//            {
+//                var dbContext
+//                    = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                // Ensure the DB is created
-                dbContext.Database.EnsureCreated();
+//                // Ensure the DB is created
+//                dbContext.Database.EnsureCreated();
 
-                // Perform any migrations
-                if (dbContext.Database.GetPendingMigrations().Any())
-                    dbContext.Database.Migrate();
+//                // Perform any migrations
+//                if (dbContext.Database.GetPendingMigrations().Any())
+//                    dbContext.Database.Migrate();
 
-#if DEBUG
-                // Seed the development database with sample data
-                DevelopmentSampleData.Initialize(dbContext);
-#endif
-            }
+//                // Seed the development database with sample data
+//                DevelopmentSampleData.Initialize(dbContext);
+//            }
+//#endif
 
             host.Run();
         }
