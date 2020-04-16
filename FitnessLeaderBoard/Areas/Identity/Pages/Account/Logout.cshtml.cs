@@ -37,7 +37,7 @@ namespace FitnessLeaderBoard.Areas.Identity.Pages.Account
             }
             else
             {
-                return RedirectToPage();
+                return LocalRedirect("/");
             }
         }
     }

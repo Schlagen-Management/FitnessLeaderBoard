@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessLeaderBoard
 {
@@ -19,19 +20,24 @@ namespace FitnessLeaderBoard
         {
             var host = CreateHostBuilder(args).Build();
 
-            // var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
-            //using (var scope = scopeFactory.CreateScope())
-            //{
-            //  var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//#if DEBUG
+//            var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
+//            using (var scope = scopeFactory.CreateScope())
+//            {
+//                var dbContext
+//                    = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            // Ensure the DB is created
-            //  db.Database.EnsureCreated();
+//                // Ensure the DB is created
+//                dbContext.Database.EnsureCreated();
 
-            // #if DEBUG
-            // Seed the development database with sample data
-            //  DevelopmentSampleData.Initialize(db);
-            //#endif
-            // }
+//                // Perform any migrations
+//                if (dbContext.Database.GetPendingMigrations().Any())
+//                    dbContext.Database.Migrate();
+
+//                // Seed the development database with sample data
+//                DevelopmentSampleData.Initialize(dbContext);
+//            }
+//#endif
 
             host.Run();
         }

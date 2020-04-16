@@ -26,24 +26,6 @@ namespace FitnessLeaderBoard.Data
                     context.StepData.Add(new StepData
                     {
                         UserId = userId,
-                        Date = new DateTime(2020, 4, 1),
-                        StepCount = 500
-                    });
-                    context.StepData.Add(new StepData
-                    {
-                        UserId = userId,
-                        Date = new DateTime(2020, 4, 2),
-                        StepCount = 500
-                    });
-                    context.StepData.Add(new StepData
-                    {
-                        UserId = userId,
-                        Date = new DateTime(2020, 4, 3),
-                        StepCount = 500
-                    });
-                    context.StepData.Add(new StepData
-                    {
-                        UserId = userId,
                         Date = new DateTime(2020, 4, 4),
                         StepCount = 500
                     });
@@ -68,6 +50,12 @@ namespace FitnessLeaderBoard.Data
                     context.StepData.Add(new StepData
                     {
                         UserId = userId,
+                        Date = new DateTime(2020, 4, 8),
+                        StepCount = 500
+                    });
+                    context.StepData.Add(new StepData
+                    {
+                        UserId = userId,
                         Date = new DateTime(2020, 4, 9),
                         StepCount = 500
                     });
@@ -83,6 +71,18 @@ namespace FitnessLeaderBoard.Data
                         Date = new DateTime(2020, 4, 11),
                         StepCount = 500
                     });
+                    context.StepData.Add(new StepData
+                    {
+                        UserId = userId,
+                        Date = new DateTime(2020, 4, 12),
+                        StepCount = 500
+                    });
+                    context.StepData.Add(new StepData
+                    {
+                        UserId = userId,
+                        Date = new DateTime(2020, 4, 13),
+                        StepCount = 500
+                    });
                 }
 
                 if (context.Leaderboard != null && context.Leaderboard.Count() == 0)
@@ -91,9 +91,11 @@ namespace FitnessLeaderBoard.Data
                     {
                         UserId = userId,
                         NameToDisplay = "The Man",
+                        Initials = "TM",
                         DailyStepCount = 500,
                         LastSevenDaysStepCount = 3000,
-                        LastThirtyDaysStepCount = 5000
+                        LastThirtyDaysStepCount = 5000,
+                        AllTimeStepCount = 10000
                     });
                 }
 
