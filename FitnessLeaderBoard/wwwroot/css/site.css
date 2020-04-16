@@ -108,6 +108,7 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-transform: uppercase;
 }
 
     .md-avatar span {
