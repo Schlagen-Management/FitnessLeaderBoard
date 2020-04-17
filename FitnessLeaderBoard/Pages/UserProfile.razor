@@ -46,7 +46,7 @@
                             @onclick="@AddSteps">
                         Add Steps
                     </button>
-                    <button type="button" class="btn btn-link">Cancel</button>
+                    <button type="button" class="btn btn-link" @onclick="@CancelEntry">Cancel</button>
                 </div>
             </EditForm>
         </div>
@@ -107,5 +107,11 @@
             // Navigate back to the home page
             navigationManager.NavigateTo("/", true);
         }
+    }
+
+    private async void CancelEntry()
+    {
+        // Navigate back to the home page
+        navigationManager.NavigateTo("/", true);
     }
 }

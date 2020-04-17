@@ -49,7 +49,8 @@
                                             <b>@leaderboardLastSevenDays[1].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardLastSevenDays[1].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardLastSevenDays[1].NameToDisplay, 13))
+                                    @leaderboardLastSevenDays[1].LastSevenDaysStepCount
                                 </div>
                             }
                             @if (leaderboardLastSevenDays.Count() > 0)
@@ -61,7 +62,8 @@
                                             <b>@leaderboardLastSevenDays[0].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardLastSevenDays[0].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardLastSevenDays[0].NameToDisplay, 13))
+                                    @leaderboardLastSevenDays[0].LastSevenDaysStepCount
                                 </div>
                             }
                             @if (leaderboardLastSevenDays.Count > 2)
@@ -73,7 +75,8 @@
                                             <b>@leaderboardLastSevenDays[2].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardLastSevenDays[2].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardLastSevenDays[2].NameToDisplay, 13))
+                                    @leaderboardLastSevenDays[2].LastSevenDaysStepCount
                                 </div>
                             }
                         </div>
@@ -111,15 +114,14 @@
                             {
                                 <tr>
                                     <!-- This row as template for users without avatar - uses settings from user profile page -->
-                                    <th class="align-middle" scope="row">@index</th>
+                                    <th class="align-middle" scope="row">@(index + 1)</th>
                                     <td class="align-middle">
                                         <div class="md-avatar user-color rounded-circle size-1">
                                             <b>@leaderboardLastSevenDays[index].Initials</b>
                                         </div>
                                     </td>
-                                    <td class="align-middle">@leaderboardLastSevenDays[index].NameToDisplay</td>
+                                    <td class="align-middle">@(Utilities.Truncate(leaderboardLastSevenDays[index].NameToDisplay, 20))</td>
                                     <td class="align-middle">@leaderboardLastSevenDays[index].LastSevenDaysStepCount</td>
-
                                 </tr>
                             }
                         </tbody>
@@ -148,7 +150,8 @@
                                             <b>@leaderboardAllTime[1].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardAllTime[1].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardAllTime[1].NameToDisplay, 13))<br/>
+                                    @leaderboardAllTime[1].AllTimeStepCount
                                 </div>
                             }
                             @if (leaderboardAllTime.Count() > 0)
@@ -160,7 +163,8 @@
                                             <b>@leaderboardAllTime[0].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardAllTime[0].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardAllTime[0].NameToDisplay, 13))<br />
+                                    @leaderboardAllTime[0].AllTimeStepCount
                                 </div>
                             }
                             @if (leaderboardAllTime.Count > 2)
@@ -172,7 +176,8 @@
                                             <b>@leaderboardAllTime[2].Initials</b>
                                         </div>
                                     </div>
-                                    @leaderboardAllTime[2].NameToDisplay
+                                    @(Utilities.Truncate(leaderboardAllTime[2].NameToDisplay, 13))<br/>
+                                    @leaderboardAllTime[0].AllTimeStepCount
                                 </div>
                             }
                         </div>
@@ -210,13 +215,13 @@
                             {
                                 <tr>
                                     <!-- This row as template for users without avatar - uses settings from user profile page -->
-                                    <th class="align-middle" scope="row">@index</th>
+                                    <th class="align-middle" scope="row">@(index + 1)</th>
                                     <td class="align-middle">
                                         <div class="md-avatar user-color rounded-circle size-1">
                                             <b>@leaderboardAllTime[index].Initials</b>
                                         </div>
                                     </td>
-                                    <td class="align-middle">@leaderboardAllTime[index].NameToDisplay</td>
+                                    <td class="align-middle">@(Utilities.Truncate(leaderboardAllTime[index].NameToDisplay, 20))</td>
                                     <td class="align-middle">@leaderboardAllTime[index].AllTimeStepCount</td>
 
                                 </tr>
