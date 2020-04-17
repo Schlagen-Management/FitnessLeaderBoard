@@ -18,6 +18,7 @@ using FitnessLeaderBoard.Data;
 using FitnessLeaderBoard.Data.EntityClasses;
 using FitnessLeaderBoard.Services;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace FitnessLeaderBoard
 {
@@ -65,6 +66,8 @@ namespace FitnessLeaderBoard
 
             services.AddScoped<StepDataService>();
             services.AddScoped<UserManager<FlbUser>>();
+            services.AddScoped<SignInManager<FlbUser>>();
+            services.AddScoped<HttpContextAccessor>();
 
             services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
         }

@@ -150,7 +150,7 @@
                                             <b>@leaderboardAllTime[1].Initials</b>
                                         </div>
                                     </div>
-                                    @(Utilities.Truncate(leaderboardAllTime[1].NameToDisplay, 13))<br/>
+                                    @(Utilities.Truncate(leaderboardAllTime[1].NameToDisplay, 13))<br />
                                     @leaderboardAllTime[1].AllTimeStepCount
                                 </div>
                             }
@@ -176,7 +176,7 @@
                                             <b>@leaderboardAllTime[2].Initials</b>
                                         </div>
                                     </div>
-                                    @(Utilities.Truncate(leaderboardAllTime[2].NameToDisplay, 13))<br/>
+                                    @(Utilities.Truncate(leaderboardAllTime[2].NameToDisplay, 13))<br />
                                     @leaderboardAllTime[0].AllTimeStepCount
                                 </div>
                             }
@@ -236,7 +236,10 @@
                 <div class="text-center my-3"> <a href="Identity/Account/Logout" class="btn btn-primary btn-sm">SIGN OUT</a> </div>
             </Authorized>
             <NotAuthorized>
-                <div class="text-center my-3"> <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a> </div>
+                <div class="text-center my-3">
+                    <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a>
+                    @*<FitnessLeaderBoard.Components.LoginComponent />*@
+                </div>
             </NotAuthorized>
         </AuthorizeView>
     </div>

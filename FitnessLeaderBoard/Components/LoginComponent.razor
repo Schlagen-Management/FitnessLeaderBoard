@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Authentication
+@using FitnessLeaderBoard.Data.EntityClasses
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Logging
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject SignInManager<FlbUser> signInManager
+@inject ILogger<LoginComponent> logger
+@inject UserManager<FlbUser> userManager
+@inject HttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+
+<AuthorizeView>
+    <Authorized>
+    </Authorized>
+    <NotAuthorized>
+        <div class="login-form">
+            @if ((externalLogins?.Count ?? 0) == 0)
+            {
+                <div>
+                    <p>
+                        There are no external authentication services configured.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="text-center social-btn mb-4">
+                    @foreach (var provider in externalLogins)
+                    {
+                        <a target="_top" class=@GetSocialButtonColorClass(provider)
+                           href="@GetLoginUrl(provider.Name)">
+                            <i class=@GetSocialClass(provider)></i>
+                            Sign in with <b>@provider.DisplayName</b>
+                        </a>
+                    }
+                </div>
+            }
+
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authStateTask { get; set; }
+
+    [TempData]
+    private string errorMessage { get; set; }
+
+    private string returnUrl { get; set; }
+
+    private IList<AuthenticationScheme> externalLogins { get; set; }
+
+    private string userId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the user Id
+        var authState = await authStateTask;
+        userId = authState.User.Identity.IsAuthenticated
+            ? userManager.GetUserId(authState.User)
+            : string.Empty;
+
+        // If the user is authenticated, retrieve info
+        if (authState.User.Identity.IsAuthenticated
+            && !string.IsNullOrEmpty(userId))
+        {
+        }
+        else
+        {
+            externalLogins
+                = (await signInManager.GetExternalAuthenticationSchemesAsync())
+                .ToList();
+
+            returnUrl = navigationManager.ToAbsoluteUri("/").ToString();
+        }
+    }
+
+    protected string GetSocialClass(AuthenticationScheme provider)
+    {
+        return "fa fa-" + provider.Name.ToLower();
+    }
+
+    protected string GetSocialButtonColorClass(AuthenticationScheme provider)
+    {
+        switch (provider.Name.ToLower())
+        {
+            case "facebook":
+                return "btn btn-primary btn-block";
+            case "twitter":
+                return "btn btn-info btn-block";
+            case "google":
+                return "btn btn-danger btn-block";
+            default:
+                return "btn btn-primary btn-block";
+        }
+    }
+
+    protected string GetLoginUrl(string provider)
+    {
+        // Query parameters
+        var queryParameters
+                = new Dictionary<string, string> { { "returnUrl", returnUrl },
+                    { "provider", provider } };
+
+        var loginUrl = QueryHelpers.AddQueryString("/Login", queryParameters);
+
+        return loginUrl;
+    }
+};
