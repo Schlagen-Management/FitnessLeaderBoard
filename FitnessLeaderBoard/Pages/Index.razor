@@ -42,10 +42,10 @@
                         <div class="row pb-3 top-three thiswk">
                             @if (leaderboardLastSevenDays.Count() > 1)
                             {
-                                <div class="col text-center runner-up">
+                                <div class="col-4 text-center runner-up">
                                     <div class="second">
                                         <span class="silver">2</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
+                                        <div class="md-avatar user-color rounded-circle">
                                             <b>@leaderboardLastSevenDays[1].Initials</b>
                                         </div>
                                     </div>
@@ -54,7 +54,7 @@
                             }
                             @if (leaderboardLastSevenDays.Count() > 0)
                             {
-                                <div class="col text-center">
+                                <div class="col-4 text-center">
                                     <div class="first">
                                         <span class="gold">1</span>
                                         <div class="md-avatar user-color rounded-circle size-2">
@@ -66,10 +66,10 @@
                             }
                             @if (leaderboardLastSevenDays.Count > 2)
                             {
-                                <div class="col text-center runner-up">
+                                <div class="col-4 text-center runner-up">
                                     <div class="third">
                                         <span class="bronze">3</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
+                                        <div class="md-avatar user-color rounded-circle">
                                             <b>@leaderboardLastSevenDays[2].Initials</b>
                                         </div>
                                     </div>
@@ -88,16 +88,15 @@
                         @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
                         <!-- No Avatar just user settings -->
                         <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><b>@userInfo.Initials</b></div>
+                            <div class="md-avatar user-color rounded-circle size-1"><a href="Identity/Account/Manage" class="stretched-link"><b>@userInfo.Initials</b></a></div>
                         </div>
                         <div class="col user-stats">
                             <span>Rank:</span>@usersLast7DaysRank<br>
                             <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
-                            <a href="UserProfile">Add Steps</a>
                         </div>
                         <div class="col user-settings">
-                            <a href="Identity/Account/Manage" class="btn btn-link">
-                                <i class="fa fa-gear"></i>
+                            <a href="UserProfile" class="btn btn-link">
+                                <i class="fa fa-plus"></i>
                             </a>
                         </div>
                     </div>
@@ -142,10 +141,10 @@
                         <div class="row pb-3 top-three thiswk">
                             @if (leaderboardAllTime.Count() > 1)
                             {
-                                <div class="col text-center runner-up">
+                                <div class="col-4 text-center runner-up">
                                     <div class="second">
                                         <span class="silver">2</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
+                                        <div class="md-avatar user-color rounded-circle">
                                             <b>@leaderboardAllTime[1].Initials</b>
                                         </div>
                                     </div>
@@ -154,7 +153,7 @@
                             }
                             @if (leaderboardAllTime.Count() > 0)
                             {
-                                <div class="col text-center">
+                                <div class="col-4 text-center">
                                     <div class="first">
                                         <span class="gold">1</span>
                                         <div class="md-avatar user-color rounded-circle size-2">
@@ -166,10 +165,10 @@
                             }
                             @if (leaderboardAllTime.Count > 2)
                             {
-                                <div class="col text-center runner-up">
+                                <div class="col-4 text-center runner-up">
                                     <div class="third">
                                         <span class="bronze">3</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
+                                        <div class="md-avatar user-color rounded-circle">
                                             <b>@leaderboardAllTime[2].Initials</b>
                                         </div>
                                     </div>
@@ -188,13 +187,17 @@
                         @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
                         <!-- No Avatar just user settings -->
                         <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><b>@userInfo.Initials</b></div>
+                            <div class="md-avatar user-color rounded-circle size-1"><a href="Identity/Account/Manage" class="stretched-link"><b>@userInfo.Initials</b></a></div>
                         </div>
                         <div class="col user-stats">
                             <span>Rank:</span>@usersAllTimeRank<br>
                             <span>Steps:</span> @userInfo.AllTimeStepCount
                         </div>
-                        <div class="col user-settings"><a href="Identity/Account/Manage" class="btn btn-link"><i class="fa fa-gear"></i></a></div>
+                        <div class="col user-settings">
+                            <a href="UserProfile" class="btn btn-link">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
                     </div>
                     <!-- end available after login -->
                 }
@@ -290,24 +293,24 @@
                     Initials
                         = stepDataService
                         .ConvertNameToInitials(authState.User.Identity.Name),
-                DailyStepCount = 0,
+                    DailyStepCount = 0,
                     LastSevenDaysStepCount = 0,
                     LastThirtyDaysStepCount = 0,
                     AllTimeStepCount = 0
                 };
+            }
         }
-    }
 
-    // Get the leaderboard for the last 7 days
-    leaderboardLastSevenDays
-        = await stepDataService.GetLeaderboard(10)
-        .OrderByDescending(lb => lb.LastSevenDaysStepCount)
-        .ToListAsync();
-
-    // Get the leaderboard for the last 30 days
-    leaderboardAllTime
+        // Get the leaderboard for the last 7 days
+        leaderboardLastSevenDays
             = await stepDataService.GetLeaderboard(10)
-            .OrderByDescending(lb => lb.AllTimeStepCount)
+            .OrderByDescending(lb => lb.LastSevenDaysStepCount)
             .ToListAsync();
-}
+
+        // Get the leaderboard for the last 30 days
+        leaderboardAllTime
+                = await stepDataService.GetLeaderboard(10)
+                .OrderByDescending(lb => lb.AllTimeStepCount)
+                .ToListAsync();
+    }
 }
