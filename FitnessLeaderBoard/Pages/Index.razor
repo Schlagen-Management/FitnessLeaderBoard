@@ -91,14 +91,14 @@
                         @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
                         <!-- No Avatar just user settings -->
                         <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><a href="Identity/Account/Manage" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                            <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
                         </div>
                         <div class="col user-stats">
                             <span>Rank:</span>@usersLast7DaysRank<br>
                             <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
                         </div>
                         <div class="col user-settings">
-                            <a href="UserProfile" class="btn btn-link">
+                            <a href="AddSteps" class="btn btn-link">
                                 <i class="fa fa-plus"></i>
                             </a>
                         </div>
@@ -120,7 +120,7 @@
                                             <b>@leaderboardLastSevenDays[index].Initials</b>
                                         </div>
                                     </td>
-                                    <td class="align-middle">@(Utilities.Truncate(leaderboardLastSevenDays[index].NameToDisplay, 20))</td>
+                                    <td class="align-middle">@(Utilities.Truncate(leaderboardLastSevenDays[index].NameToDisplay, 17))</td>
                                     <td class="align-middle">@leaderboardLastSevenDays[index].LastSevenDaysStepCount</td>
                                 </tr>
                             }
@@ -192,14 +192,14 @@
                         @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
                         <!-- No Avatar just user settings -->
                         <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><a href="Identity/Account/Manage" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                            <div class="md-avatar user-color rounded-circle size-1"><a href="UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
                         </div>
                         <div class="col user-stats">
                             <span>Rank:</span>@usersAllTimeRank<br>
                             <span>Steps:</span> @userInfo.AllTimeStepCount
                         </div>
                         <div class="col user-settings">
-                            <a href="UserProfile" class="btn btn-link">
+                            <a href="AddSteps" class="btn btn-link">
                                 <i class="fa fa-plus"></i>
                             </a>
                         </div>
@@ -221,7 +221,7 @@
                                             <b>@leaderboardAllTime[index].Initials</b>
                                         </div>
                                     </td>
-                                    <td class="align-middle">@(Utilities.Truncate(leaderboardAllTime[index].NameToDisplay, 20))</td>
+                                    <td class="align-middle">@(Utilities.Truncate(leaderboardAllTime[index].NameToDisplay, 17))</td>
                                     <td class="align-middle">@leaderboardAllTime[index].AllTimeStepCount</td>
 
                                 </tr>
@@ -231,17 +231,7 @@
                 }
             </div>
         </div>
-        <AuthorizeView>
-            <Authorized>
-                <div class="text-center my-3"> <a href="Identity/Account/Logout" class="btn btn-primary btn-sm">SIGN OUT</a> </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="text-center my-3">
-                    <a href="Identity/Account/Login" class="btn btn-primary btn-sm">SIGN IN</a>
-                    @*<FitnessLeaderBoard.Components.LoginComponent />*@
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+        <FitnessLeaderBoard.Components.LoginComponent />
     </div>
     <div class="col-sm-3 offset-sm-1">
         <!-- Right ad block visible on tablets and up -->

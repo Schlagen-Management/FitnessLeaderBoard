@@ -1,4 +1,4 @@
-﻿@page "/UserProfile"
+﻿@page "/AddSteps"
 
 @using FitnessLeaderBoard.Data.EntityClasses
 @using FitnessLeaderBoard.Services
@@ -24,7 +24,7 @@
     </div>
     <div class="col-sm-4 offset-sm-1">
         <div class="user-profile">
-            <EditForm Model="@userInput" OnValidSubmit="@AddSteps">
+            <EditForm Model="@userInput" OnValidSubmit="@AddUserSteps">
                 <DataAnnotationsValidator />
 
                 <div class="form-group">
@@ -42,8 +42,7 @@
                     <ValidationMessage For="@(() => userInput.StepsTaken)" />
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary"
-                            @onclick="@AddSteps">
+                    <button type="submit" class="btn btn-primary">
                         Add Steps
                     </button>
                     <button type="button" class="btn btn-link" @onclick="@CancelEntry">Cancel</button>
@@ -98,7 +97,7 @@
         }
     }
 
-    private async Task AddSteps()
+    private async Task AddUserSteps()
     {
         DateTime date = DateTime.Today.AddDays(userInput.SelectedDay).Date;
 

@@ -5,6 +5,8 @@
 @using Microsoft.Extensions.Logging
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.WebUtilities
+@using System.Security.Claims
+@using System.ComponentModel.DataAnnotations
 
 @inject SignInManager<FlbUser> signInManager
 @inject ILogger<LoginComponent> logger
@@ -14,31 +16,32 @@
 
 <AuthorizeView>
     <Authorized>
+        <div class="text-center my-3">
+            <a href=@GetLogoutUrl() 
+               class="btn btn-primary btn-sm">SIGN OUT</a> </div>
     </Authorized>
     <NotAuthorized>
         <div class="login-form">
             @if ((externalLogins?.Count ?? 0) == 0)
             {
-                <div>
-                    <p>
-                        There are no external authentication services configured.
-                    </p>
-                </div>
+            <div>
+                <p>
+                    There are no external authentication services configured.
+                </p>
+            </div>
             }
             else
             {
-                <div class="text-center social-btn mb-4">
-                    @foreach (var provider in externalLogins)
-                    {
-                        <a target="_top" class=@GetSocialButtonColorClass(provider)
-                           href="@GetLoginUrl(provider.Name)">
-                            <i class=@GetSocialClass(provider)></i>
-                            Sign in with <b>@provider.DisplayName</b>
-                        </a>
-                    }
-                </div>
+            <div class="text-center social-btn mb-4">
+                @foreach (var provider in externalLogins)
+                {
+                    <a href="@GetLoginUrl(provider.Name)" target="_top" class="@GetSocialButtonColorCss(provider)">
+                        <i class="@GetSocialCss(provider)"></i>
+                        Sign in with <b>@provider.DisplayName</b>
+                    </a>
+                }
+            </div>
             }
-
         </div>
     </NotAuthorized>
 </AuthorizeView>
@@ -64,27 +67,26 @@
             ? userManager.GetUserId(authState.User)
             : string.Empty;
 
-        // If the user is authenticated, retrieve info
-        if (authState.User.Identity.IsAuthenticated
-            && !string.IsNullOrEmpty(userId))
+        if (authState.User.Identity.IsAuthenticated == false
+            || string.IsNullOrEmpty(userId))
         {
-        }
-        else
-        {
+            // No external login info, get the collection of external logins
             externalLogins
                 = (await signInManager.GetExternalAuthenticationSchemesAsync())
                 .ToList();
-
-            returnUrl = navigationManager.ToAbsoluteUri("/").ToString();
         }
+
+        returnUrl = "~/";
+
+        await base.OnInitializedAsync();
     }
 
-    protected string GetSocialClass(AuthenticationScheme provider)
+    protected string GetSocialCss(AuthenticationScheme provider)
     {
         return "fa fa-" + provider.Name.ToLower();
     }
 
-    protected string GetSocialButtonColorClass(AuthenticationScheme provider)
+    protected string GetSocialButtonColorCss(AuthenticationScheme provider)
     {
         switch (provider.Name.ToLower())
         {
@@ -110,4 +112,15 @@
 
         return loginUrl;
     }
-};
+
+    protected string GetLogoutUrl()
+    {
+        // Query parameters
+        var queryParameters
+                = new Dictionary<string, string> { { "returnUrl", returnUrl } };
+
+        var logoutUrl = QueryHelpers.AddQueryString("/Logout", queryParameters);
+
+        return logoutUrl;
+    }
+}

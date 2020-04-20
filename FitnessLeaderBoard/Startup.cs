@@ -52,6 +52,7 @@ namespace FitnessLeaderBoard
             {
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.CallbackPath = "/signing-facebook";
             })
             .AddGoogle(options =>
             {
@@ -67,7 +68,10 @@ namespace FitnessLeaderBoard
             services.AddScoped<StepDataService>();
             services.AddScoped<UserManager<FlbUser>>();
             services.AddScoped<SignInManager<FlbUser>>();
+            services.AddHttpContextAccessor();
             services.AddScoped<HttpContextAccessor>();
+            services.AddHttpClient();
+            services.AddScoped<HttpClient>();
 
             services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
         }
