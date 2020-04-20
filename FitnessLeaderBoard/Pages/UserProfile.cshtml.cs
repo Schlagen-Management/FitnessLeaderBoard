@@ -39,7 +39,7 @@ namespace FitnessLeaderBoard.Pages
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
-            [Display(Name = "FullName")]
+            [Display(Name = "Full Name")]
             public string FullName { get; set; }
 
             [Display(Name = "Display Name")]

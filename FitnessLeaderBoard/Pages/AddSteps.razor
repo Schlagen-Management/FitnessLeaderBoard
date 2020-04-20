@@ -39,10 +39,12 @@
                     <label for="stepsTaken">Steps Taken</label>
                     <InputNumber TValue="int" id="stepsTaken" class="form-control"
                                  @bind-Value="@userInput.StepsTaken" />
-                    <ValidationMessage For="@(() => userInput.StepsTaken)" />
+                    <span class="text-danger">
+                        <ValidationMessage For="@(() => userInput.StepsTaken)" />
+                    </span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary btn-sm">
                         Add Steps
                     </button>
                     <button type="button" class="btn btn-link" @onclick="@CancelEntry">Cancel</button>
@@ -70,6 +72,7 @@
         public int SelectedDay { get; set; }
 
         [Required]
+        [Range(1, 65000, ErrorMessage = "Steps must be between 1 and 65,000 steps")]
         public int StepsTaken { get; set; }
     }
 
