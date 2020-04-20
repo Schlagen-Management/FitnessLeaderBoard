@@ -115,6 +115,10 @@ hr {
         font-weight: 700;
     }
 
+    .md-avatar a {
+        color: #f0f0f0;
+    }
+
 .user-color {
     background-color: #066;
 }
