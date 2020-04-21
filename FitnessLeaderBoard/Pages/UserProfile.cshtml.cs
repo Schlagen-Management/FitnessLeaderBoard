@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using FitnessLeaderBoard.Data.EntityClasses;
+using FitnessLeaderBoard.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,13 +15,16 @@ namespace FitnessLeaderBoard.Pages
     {
         private readonly UserManager<FlbUser> _userManager;
         private readonly SignInManager<FlbUser> _signInManager;
+        private readonly StepDataService _stepDataService;
 
         public UserProfileModel(
             UserManager<FlbUser> userManager,
-            SignInManager<FlbUser> signInManager)
+            SignInManager<FlbUser> signInManager,
+            StepDataService stepDataService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _stepDataService = stepDataService;
         }
 
         public string Username { get; set; }
@@ -35,9 +39,9 @@ namespace FitnessLeaderBoard.Pages
 
         public class InputModel
         {
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            //[Phone]
+            //[Display(Name = "Phone number")]
+            //public string PhoneNumber { get; set; }
 
             [Display(Name = "Full Name")]
             public string FullName { get; set; }
@@ -57,7 +61,7 @@ namespace FitnessLeaderBoard.Pages
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
+                //PhoneNumber = phoneNumber,
                 FullName = user.FullName,
                 DisplayName = user.DisplayName
             };
@@ -89,16 +93,16 @@ namespace FitnessLeaderBoard.Pages
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-                }
-            }
+            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            //if (Input.PhoneNumber != phoneNumber)
+            //{
+            //    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+            //    if (!setPhoneResult.Succeeded)
+            //    {
+            //        var userId = await _userManager.GetUserIdAsync(user);
+            //        throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
+            //    }
+            //}
 
             if (Input.FullName != user.FullName)
                 user.FullName = Input.FullName;
@@ -109,6 +113,10 @@ namespace FitnessLeaderBoard.Pages
             await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
+
+            // Update the user's info in the leaderboard
+            await _stepDataService.UpdateUserInfoInLeaderboard(user);
+
             return LocalRedirect("~/");
         }
     }

@@ -199,6 +199,27 @@ namespace FitnessLeaderBoard.Services
                 lb => lb.UserId == userId);
         }
 
+        public async Task UpdateUserInfoInLeaderboard(FlbUser user)
+        {
+            var usersLeaderboardInfo
+                = await context.Leaderboard
+                .FirstOrDefaultAsync(lb => lb.UserId == user.Id);
+
+            usersLeaderboardInfo
+                .NameToDisplay
+                = !string.IsNullOrEmpty(user.DisplayName)
+                ? user.DisplayName
+                : !string.IsNullOrEmpty(user.FullName)
+                ? user.FullName
+                : user.Email;
+
+            usersLeaderboardInfo
+                .Initials = ConvertNameToInitials(
+                    usersLeaderboardInfo.NameToDisplay);
+
+            context.SaveChanges();
+        }
+
         public string ConvertNameToInitials(string name)
         {
 
