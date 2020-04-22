@@ -16,7 +16,11 @@
             <div class="col-9 text-center">
                 <h1 class="h4 my-2">Fitness Leaderboard</h1>
             </div>
-            <div class="col-3 text-center"><a href="/UserProfile" class="user-link-alt stretched-link"><i class="fa fa-2x fa-user-circle-o"></i></a></div>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="col-3 text-center"><a href="/UserProfile" class="user-link-alt stretched-link"><i class="fa fa-2x fa-user-circle-o"></i></a></div>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </div>
@@ -112,40 +116,44 @@
                     </div>
                 }
 
-                @if (userInfo != null)
-                {
-                    <!-- Ths section is available after login -->
-                    <div class="row pb-3 myrank thiswk">
-                        @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                <AuthorizeView>
+                    <Authorized>
+                        @if (userInfo != null)
                         {
-                            <!-- With Avatar -->
-                            <div class="col user-avatar">
-                                <a href="/UserProfile" class="stretched-link">
-                                    <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
-                                </a>
+                            <!-- Ths section is available after login -->
+                            <div class="row pb-3 myrank thiswk">
+                                @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                                {
+                                    <!-- With Avatar -->
+                                    <div class="col user-avatar">
+                                        <a href="/UserProfile" class="stretched-link">
+                                            <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- No Avatar just user settings -->
+                                    <div class="col user-avatar">
+                                        <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                                    </div>
+                                }
+                                <div class="col user-stats">
+                                    <span>Rank:</span>@usersLast7DaysRank<br>
+                                    <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
+                                </div>
+                                <div class="col user-settings">
+                                    <a href="AddSteps" class="btn btn-link">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
+                            <!-- end available after login -->
                         }
-                        else
-                        {
-                            <!-- No Avatar just user settings -->
-                            <div class="col user-avatar">
-                                <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
-                            </div>
-                        }
-                        <div class="col user-stats">
-                            <span>Rank:</span>@usersLast7DaysRank<br>
-                            <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
-                        </div>
-                        <div class="col user-settings">
-                            <a href="AddSteps" class="btn btn-link">
-                                <i class="fa fa-plus"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- end available after login -->
+                    </Authorized>
+                </AuthorizeView>
 
-                    <!-- Insert tutorial modal here -->
-                }
+                <!-- Insert tutorial modal here -->
 
                 @if (leaderboardLastSevenDays != null && leaderboardLastSevenDays.Count() > 3)
                 {
@@ -256,38 +264,42 @@
                     </div>
                 }
 
-                @if (userInfo != null)
-                {
-                    <!-- Ths section is available after login -->
-                    <div class="row pb-3 myrank alltime">
-                        @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                <AuthorizeView>
+                    <Authorized>
+                        @if (userInfo != null)
                         {
-                            <!-- With Avatar -->
-                            <div class="col user-avatar">
-                                <a href="/UserProfile" class="stretched-link">
-                                    <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
-                                </a>
+                            <!-- Ths section is available after login -->
+                            <div class="row pb-3 myrank alltime">
+                                @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                                {
+                                    <!-- With Avatar -->
+                                    <div class="col user-avatar">
+                                        <a href="/UserProfile" class="stretched-link">
+                                            <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- No Avatar just user settings -->
+                                    <div class="col user-avatar">
+                                        <div class="md-avatar user-color rounded-circle size-1"><a href="UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                                    </div>
+                                }
+                                <div class="col user-stats">
+                                    <span>Rank:</span>@usersAllTimeRank<br>
+                                    <span>Steps:</span> @userInfo.AllTimeStepCount
+                                </div>
+                                <div class="col user-settings">
+                                    <a href="AddSteps" class="btn btn-link">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
+                            <!-- end available after login -->
                         }
-                        else
-                        {
-                            <!-- No Avatar just user settings -->
-                            <div class="col user-avatar">
-                                <div class="md-avatar user-color rounded-circle size-1"><a href="UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
-                            </div>
-                        }
-                        <div class="col user-stats">
-                            <span>Rank:</span>@usersAllTimeRank<br>
-                            <span>Steps:</span> @userInfo.AllTimeStepCount
-                        </div>
-                        <div class="col user-settings">
-                            <a href="AddSteps" class="btn btn-link">
-                                <i class="fa fa-plus"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- end available after login -->
-                }
+                    </Authorized>
+                </AuthorizeView>
 
                 @if (leaderboardAllTime != null && leaderboardAllTime.Count() > 3)
                 {
