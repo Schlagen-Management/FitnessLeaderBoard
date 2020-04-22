@@ -342,8 +342,6 @@
 
     private LeaderboardData userInfo { get; set; }
 
-    private FlbUser user { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         // Get the user Id
@@ -356,8 +354,6 @@
         if (authState.User.Identity.IsAuthenticated
             && !string.IsNullOrEmpty(userId))
         {
-            user = await userManager.FindByIdAsync(userId);
-
             usersLast7DaysRank
                 = await stepDataService.GetUsersRank(userId,
                 StepDataService.StepCountType.SevenDayStepCount);
@@ -372,14 +368,16 @@
 
         // Get the leaderboard for the last 7 days
         leaderboardLastSevenDays
-            = await stepDataService.GetLeaderboard(10)
+            = await stepDataService.GetLeaderboard()
             .OrderByDescending(lb => lb.LastSevenDaysStepCount)
+            .Take(10)
             .ToListAsync();
 
-        // Get the leaderboard for the last 30 days
+        // Get the leaderboard for all time
         leaderboardAllTime
-                = await stepDataService.GetLeaderboard(10)
+                = await stepDataService.GetLeaderboard()
                 .OrderByDescending(lb => lb.AllTimeStepCount)
+                .Take(10)
                 .ToListAsync();
     }
 }

@@ -36,8 +36,10 @@ namespace FitnessLeaderBoard.Services
             var results = string.Empty;
 
             if (HasUserEnteredStepForDate(userId, date)) 
+                // The user has already entered steps for the day, note the error
                 return string.Format("You have already entered steps for {0}", date.ToString("dddd MMM d"));
 
+            // Set up the transaction
             using (var transaction = context.Database.BeginTransactionAsync())
             {
                 try
@@ -50,7 +52,7 @@ namespace FitnessLeaderBoard.Services
                         StepCount = stepCount
                     });
 
-                    // Save changes
+                    // Save these changes
                     results
                         = context.SaveChanges() > 0 ? string.Empty : "Error saving step data";
 
@@ -72,16 +74,16 @@ namespace FitnessLeaderBoard.Services
                         && sd.Date <= DateTime.Today.Date)
                         .Sum(sd => sd.StepCount);
 
+                    // Get the all-time step count
                     var allTimeStepCount
                         = context.StepData.Where(sd => sd.UserId == userId)
                         .Sum(sd => sd.StepCount);
 
                     var userExistsInLeaderboard
                         = context.Leaderboard.Any(lb => lb.UserId == userId);
-
                     if (userExistsInLeaderboard == false)
                     {
-                        // Add the new user
+                        // The user does not exist in the leaderboard, add the new user
                         context.Add(new LeaderboardData
                         {
                             UserId = userId,
@@ -108,9 +110,11 @@ namespace FitnessLeaderBoard.Services
                         userData.AllTimeStepCount = allTimeStepCount;
                     }
 
+                    // Save the leaderboard changes
                     results
                         = await context.SaveChangesAsync() > 0 ? string.Empty : "Error saving leaderboard update";
 
+                    // And commit the transaction
                     (await transaction).Commit();
                 }
                 catch (Exception ex)
@@ -123,17 +127,10 @@ namespace FitnessLeaderBoard.Services
             return results;
         }
 
-        public IQueryable<LeaderboardData> GetLeaderboard(int? quantity = null)
+        public IQueryable<LeaderboardData> GetLeaderboard()
         {
-            if (quantity.HasValue == false)
-                // Return all results
-                return context.Leaderboard
-                    .AsNoTracking();
-            else
-                // Only return the specified quantity
-                return context.Leaderboard
-                    .Take(quantity.Value)
-                    .AsNoTracking();
+            // Return all results
+            return context.Leaderboard.AsNoTracking();
         }
 
         public async Task<int> GetUsersRank(string userId, StepCountType stepCountType)
@@ -145,12 +142,15 @@ namespace FitnessLeaderBoard.Services
                 case StepCountType.SevenDayStepCount:
                     {
                         var stepCount
-                            = await context.Leaderboard.Where(lb => lb.UserId == userId)
+                            = await context.Leaderboard
+                            .AsNoTracking()
+                            .Where(lb => lb.UserId == userId)
                             .Select(lb => lb.LastSevenDaysStepCount)
                             .FirstOrDefaultAsync();
 
                         results
                             = await context.Leaderboard
+                            .AsNoTracking()
                             .CountAsync(lb => lb.LastSevenDaysStepCount > stepCount)
                             + 1;
                     }
@@ -158,12 +158,15 @@ namespace FitnessLeaderBoard.Services
                 case StepCountType.ThirtyDayStepCount:
                     {
                         var stepCount
-                            = await context.Leaderboard.Where(lb => lb.UserId == userId)
+                            = await context.Leaderboard
+                            .AsNoTracking()
+                            .Where(lb => lb.UserId == userId)
                             .Select(lb => lb.LastThirtyDaysStepCount)
                             .FirstOrDefaultAsync();
 
                         results
                             = await context.Leaderboard
+                            .AsNoTracking()
                             .CountAsync(lb => lb.LastThirtyDaysStepCount > stepCount)
                             + 1;
                     }
@@ -171,12 +174,15 @@ namespace FitnessLeaderBoard.Services
                 case StepCountType.AllTimeStepCount:
                     {
                         var stepCount
-                            = await context.Leaderboard.Where(lb => lb.UserId == userId)
+                            = await context.Leaderboard
+                            .AsNoTracking()
+                            .Where(lb => lb.UserId == userId)
                             .Select(lb => lb.AllTimeStepCount)
                             .FirstOrDefaultAsync();
 
                         results
                             = await context.Leaderboard
+                            .AsNoTracking()
                             .CountAsync(lb => lb.AllTimeStepCount > stepCount)
                             + 1;
                     }
@@ -189,7 +195,9 @@ namespace FitnessLeaderBoard.Services
         public async Task<LeaderboardData> GetUserLeaderboardInfo(string userId)
         {
             var leaderBoardInfo
-                = await context.Leaderboard.FirstOrDefaultAsync(
+                = await context.Leaderboard
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
                     lb => lb.UserId == userId);
 
             var user
@@ -251,13 +259,17 @@ namespace FitnessLeaderBoard.Services
 
             // Compute the initials
             List<string> allInitials
-                = name.Split(" ").Select(n => n.Substring(0, 1)).ToList();
+                = name.Split(" ")
+                .Select(n => n.Substring(0, 1))
+                .ToList();
             string initials = string.Empty;
             for (var index = 0; index < allInitials.Count(); index++)
             {
+                // Get the first initial
                 if (index == 0)
                     initials += allInitials[index];
 
+                // and get the last initial, if it exists
                 if (index > 0 && index == allInitials.Count() - 1)
                     initials += allInitials[index];
             }
@@ -267,6 +279,7 @@ namespace FitnessLeaderBoard.Services
 
         public string GetNameToDisplay(FlbUser user)
         {
+            // Display name precedence: DisplayName -> Full Name -> email address
             var nameToDisplay
                 = !string.IsNullOrEmpty(user.DisplayName)
                 ? user.DisplayName

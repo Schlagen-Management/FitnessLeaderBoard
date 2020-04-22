@@ -39,10 +39,6 @@ namespace FitnessLeaderBoard.Pages
 
         public class InputModel
         {
-            //[Phone]
-            //[Display(Name = "Phone number")]
-            //public string PhoneNumber { get; set; }
-
             [Display(Name = "Full Name")]
             public string FullName { get; set; }
 
@@ -56,16 +52,11 @@ namespace FitnessLeaderBoard.Pages
         private async Task LoadAsync(FlbUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var fullName = user.FullName;
-            var displayName = user.DisplayName;
-            var imageLink = user.ImageLink;
 
             Username = userName;
 
             Input = new InputModel
             {
-                //PhoneNumber = phoneNumber,
                 FullName = user.FullName,
                 DisplayName = user.DisplayName,
                 ImageLink = user.ImageLink
@@ -97,17 +88,6 @@ namespace FitnessLeaderBoard.Pages
                 await LoadAsync(user);
                 return Page();
             }
-
-            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //if (Input.PhoneNumber != phoneNumber)
-            //{
-            //    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            //    if (!setPhoneResult.Succeeded)
-            //    {
-            //        var userId = await _userManager.GetUserIdAsync(user);
-            //        throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-            //    }
-            //}
 
             if (Input.FullName != user.FullName)
                 user.FullName = Input.FullName;

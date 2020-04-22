@@ -119,6 +119,7 @@ namespace FitnessLeaderBoard.Pages
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
+
             // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -160,7 +161,8 @@ namespace FitnessLeaderBoard.Pages
         protected async Task UpdateUsersImageLink(ExternalLoginInfo info)
         {
             var user
-                = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+                = await _userManager.FindByEmailAsync(
+                    info.Principal.FindFirstValue(ClaimTypes.Email));
 
             // Update the picture link
             switch (info.LoginProvider)
@@ -178,8 +180,10 @@ namespace FitnessLeaderBoard.Pages
                     break;
             }
 
+            // Update the user info with the user's profile image
             await _userManager.UpdateAsync(user);
 
+            // Update the user's profile image in the leaderboard
             await _stepDataService.UpdateUserInfoInLeaderboard(user);
         }
     }
