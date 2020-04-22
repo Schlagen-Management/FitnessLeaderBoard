@@ -133,6 +133,19 @@ hr {
     background-color: #066;
 }
 
+a.user-link-alt {
+    color: #d0d0d0;
+    text-decoration: none;
+}
+
+    a.user-link-alt:hover, a.user-link-alt:focus {
+        color: #ffffff;
+    }
+
+.user-link-alt i {
+    margin-top: 0.75rem;
+}
+
 .table {
     color: #f0f0f0;
 }
