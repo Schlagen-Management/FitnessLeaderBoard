@@ -17,30 +17,34 @@
 <AuthorizeView>
     <Authorized>
         <div class="text-center my-3">
-            <a href=@GetLogoutUrl() 
-               class="btn btn-primary btn-sm">SIGN OUT</a> </div>
+            <a href=@GetLogoutUrl()
+               class="btn btn-primary btn-sm">SIGN OUT</a>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <div class="login-form">
+        <div class="container login-form">
+            <p class="text-center">Sign in with</p>
             @if ((externalLogins?.Count ?? 0) == 0)
             {
-            <div>
-                <p>
-                    There are no external authentication services configured.
-                </p>
-            </div>
+                <div>
+                    <p>
+                        There are no external authentication services configured.
+                    </p>
+                </div>
             }
             else
             {
-            <div class="text-center social-btn mb-4">
-                @foreach (var provider in externalLogins)
-                {
-                    <a href="@GetLoginUrl(provider.Name)" target="_top" class="@GetSocialButtonColorCss(provider)">
-                        <i class="@GetSocialCss(provider)"></i>
-                        Sign in with <b>@provider.DisplayName</b>
-                    </a>
-                }
-            </div>
+                <div class="row social-btn mb-4">
+                    @foreach (var provider in externalLogins)
+                    {
+                        <div class="col-6">
+                            <a href="@GetLoginUrl(provider.Name)" target="_top" class="@GetSocialButtonColorCss(provider)">
+                                <i class="@GetSocialCss(provider)"></i>
+                                <b>@provider.DisplayName</b>
+                            </a>
+                        </div>
+                    }
+                </div>
             }
         </div>
     </NotAuthorized>

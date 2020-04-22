@@ -50,6 +50,15 @@ h1.h4 {
     color: #f0f0f0;
 }
 
+.btn-link {
+    color: #d0d0d0;
+}
+
+    .btn-link:hover, .btn-link:focus {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
 .tab-content {
     height: calc(100vh - 300px);
 }
@@ -117,6 +126,7 @@ hr {
 
     .md-avatar a {
         color: #f0f0f0;
+        text-decoration: none;
     }
 
 .user-color {
