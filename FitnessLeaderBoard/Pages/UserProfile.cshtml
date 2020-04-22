@@ -25,7 +25,11 @@
                 <input asp-for="Input.DisplayName" class="form-control" />
             </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary btn-sm">Save</button>
+            <button class="btn btn-link" type="submit" asp-route-isCancel="true">Cancel</button>
         </form>
+    </div>
+    <div class="text-center">
+        <a href="~/Privacy" class="btn btn-link btn-sm">Privacy Policy</a> | <a href="~/ToS" class="btn btn-link btn-sm">Terms of Service</a>
     </div>
 </div>
 

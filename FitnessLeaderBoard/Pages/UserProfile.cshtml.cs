@@ -75,8 +75,11 @@ namespace FitnessLeaderBoard.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string isCancel)
         {
+            if (isCancel == "true")
+                return LocalRedirect("~/");
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
