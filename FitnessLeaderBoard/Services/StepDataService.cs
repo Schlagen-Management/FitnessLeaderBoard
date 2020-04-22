@@ -1,8 +1,10 @@
 ﻿using FitnessLeaderBoard.Data;
 using FitnessLeaderBoard.Data.EntityClasses;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,9 +16,13 @@ namespace FitnessLeaderBoard.Services
 
         private ApplicationDbContext context { get; set; }
 
-        public StepDataService(ApplicationDbContext _context)
+        private UserManager<FlbUser> userManager { get; set; }
+
+        public StepDataService(ApplicationDbContext _context,
+            UserManager<FlbUser> _userManager)
         {
             context = _context;
+            userManager = _userManager;
         }
 
         public bool HasUserEnteredStepForDate(string userId, DateTime date)
@@ -25,9 +31,12 @@ namespace FitnessLeaderBoard.Services
                 && sd.Date.Date == date.Date);
         }
 
-        public async Task<bool> AddUserStepDataForDate(string userId, DateTime date, int stepCount)
+        public async Task<string> AddUserStepDataForDate(string userId, DateTime date, int stepCount)
         {
-            bool results = true;
+            var results = string.Empty;
+
+            if (HasUserEnteredStepForDate(userId, date)) 
+                return string.Format("You have already entered steps for {0}", date.ToString("dddd MMM d"));
 
             using (var transaction = context.Database.BeginTransactionAsync())
             {
@@ -43,39 +52,23 @@ namespace FitnessLeaderBoard.Services
 
                     // Save changes
                     results
-                        = context.SaveChanges() > 0;
+                        = context.SaveChanges() > 0 ? string.Empty : "Error saving step data";
 
                     // Now compute the user's leaderboard info
 
-                    // Get the user's name to display
+                    // Get the user's information
+                    var user = await userManager.FindByIdAsync(userId);
                     var nameToDisplay
-                        = context.Users.Where(u => u.Id == userId)
-                        .Select(u =>
-                        // pick display name first, if exists
-                        u.DisplayName.Length > 0
-                        ? u.DisplayName
-                        // else pick full name, if it exists
-                        : u.FullName.Length > 0
-                        ? u.FullName
-                        // else display email address
-                        : u.Email)
-                        .FirstOrDefault();
-
-                    // Compute the initials
+                        = GetNameToDisplay(user);
                     var initials
                         = ConvertNameToInitials(nameToDisplay);
+                    var imageLink
+                        = user.ImageLink;
 
                     // Count of last 7 days of steps
                     var last7daysStepCount
                         = context.StepData.Where(sd => sd.UserId == userId
                         && sd.Date >= DateTime.Today.AddDays(-7).Date
-                        && sd.Date <= DateTime.Today.Date)
-                        .Sum(sd => sd.StepCount);
-
-                    // Count of the last 30 days of steps
-                    var last30daysStepCount
-                        = context.StepData.Where(sd => sd.UserId == userId
-                        && sd.Date >= DateTime.Today.AddDays(-30).Date
                         && sd.Date <= DateTime.Today.Date)
                         .Sum(sd => sd.StepCount);
 
@@ -93,10 +86,10 @@ namespace FitnessLeaderBoard.Services
                         {
                             UserId = userId,
                             NameToDisplay = nameToDisplay,
+                            ImageLink = imageLink,
                             Initials = initials,
                             DailyStepCount = stepCount,
                             LastSevenDaysStepCount = last7daysStepCount,
-                            LastThirtyDaysStepCount = last7daysStepCount,
                             AllTimeStepCount = allTimeStepCount
                         });
                     }
@@ -108,22 +101,22 @@ namespace FitnessLeaderBoard.Services
                             .FirstOrDefault();
 
                         userData.NameToDisplay = nameToDisplay;
+                        userData.ImageLink = imageLink;
                         userData.Initials = initials;
                         userData.DailyStepCount = stepCount;
                         userData.LastSevenDaysStepCount = last7daysStepCount;
-                        userData.LastThirtyDaysStepCount = last30daysStepCount;
                         userData.AllTimeStepCount = allTimeStepCount;
                     }
 
                     results
-                        = await context.SaveChangesAsync() > 0;
+                        = await context.SaveChangesAsync() > 0 ? string.Empty : "Error saving leaderboard update";
 
                     (await transaction).Commit();
                 }
                 catch (Exception ex)
                 {
                     /// TODO: Handle failure
-                    return false;
+                    return "Unknown error";
                 }
             }
 
@@ -195,8 +188,39 @@ namespace FitnessLeaderBoard.Services
 
         public async Task<LeaderboardData> GetUserLeaderboardInfo(string userId)
         {
-            return await context.Leaderboard.FirstOrDefaultAsync(
-                lb => lb.UserId == userId);
+            var leaderBoardInfo
+                = await context.Leaderboard.FirstOrDefaultAsync(
+                    lb => lb.UserId == userId);
+
+            var user
+                = await userManager.FindByIdAsync(userId);
+
+            // Get user information
+            var nameToDisplay
+                = GetNameToDisplay(user);
+            var initials
+                = ConvertNameToInitials(nameToDisplay);
+            var imageLink
+                = user.ImageLink;
+
+            if (leaderBoardInfo == null)
+            {
+                leaderBoardInfo
+                    = new LeaderboardData
+                    {
+                        UserId = userId,
+                        DailyStepCount = 0,
+                        LastSevenDaysStepCount = 0,
+                        LastThirtyDaysStepCount = 0,
+                        AllTimeStepCount = 0
+                    };
+            }
+
+            leaderBoardInfo.NameToDisplay = nameToDisplay;
+            leaderBoardInfo.Initials = initials;
+            leaderBoardInfo.ImageLink = imageLink;
+
+            return leaderBoardInfo;
         }
 
         public async Task UpdateUserInfoInLeaderboard(FlbUser user)
@@ -205,17 +229,19 @@ namespace FitnessLeaderBoard.Services
                 = await context.Leaderboard
                 .FirstOrDefaultAsync(lb => lb.UserId == user.Id);
 
+            if (usersLeaderboardInfo == null)
+                return;
+
             usersLeaderboardInfo
                 .NameToDisplay
-                = !string.IsNullOrEmpty(user.DisplayName)
-                ? user.DisplayName
-                : !string.IsNullOrEmpty(user.FullName)
-                ? user.FullName
-                : user.Email;
+                = GetNameToDisplay(user);
 
             usersLeaderboardInfo
                 .Initials = ConvertNameToInitials(
                     usersLeaderboardInfo.NameToDisplay);
+
+            usersLeaderboardInfo
+                .ImageLink = user.ImageLink;
 
             context.SaveChanges();
         }
@@ -237,6 +263,18 @@ namespace FitnessLeaderBoard.Services
             }
 
             return initials;
+        }
+
+        public string GetNameToDisplay(FlbUser user)
+        {
+            var nameToDisplay
+                = !string.IsNullOrEmpty(user.DisplayName)
+                ? user.DisplayName
+                : !string.IsNullOrEmpty(user.FullName)
+                ? user.FullName
+                : user.Email;
+
+            return nameToDisplay;
         }
     }
 }

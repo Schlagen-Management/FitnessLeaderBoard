@@ -45,9 +45,17 @@
                                 <div class="col-4 text-center runner-up">
                                     <div class="second">
                                         <span class="silver">2</span>
-                                        <div class="md-avatar user-color rounded-circle">
-                                            <b>@leaderboardLastSevenDays[1].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[1].ImageLink))
+                                        {
+                                            <img src=@leaderboardLastSevenDays[1].ImageLink alt="Avatar" 
+                                                 class="md-avatar rounded-circle">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle">
+                                                <b>@leaderboardLastSevenDays[1].Initials</b>
+                                            </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardLastSevenDays[1].NameToDisplay, 13))<br/>
                                     @leaderboardLastSevenDays[1].LastSevenDaysStepCount
@@ -58,9 +66,17 @@
                                 <div class="col-4 text-center">
                                     <div class="first">
                                         <span class="gold">1</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
-                                            <b>@leaderboardLastSevenDays[0].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[0].ImageLink))
+                                        {
+                                            <img src=@leaderboardLastSevenDays[0].ImageLink alt="Avatar" 
+                                                 class="md-avatar rounded-circle size-2">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle size-2">
+                                                <b>@leaderboardLastSevenDays[0].Initials</b>
+                                            </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardLastSevenDays[0].NameToDisplay, 13))<br />
                                     @leaderboardLastSevenDays[0].LastSevenDaysStepCount
@@ -71,9 +87,17 @@
                                 <div class="col-4 text-center runner-up">
                                     <div class="third">
                                         <span class="bronze">3</span>
+                                        @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[2].ImageLink))
+                                        {
+                                            <img src=@leaderboardLastSevenDays[2].ImageLink alt="Avatar"
+                                                 class="md-avatar rounded-circle">                                       
+                                        }
+                                        else
+                                        {
                                         <div class="md-avatar user-color rounded-circle">
                                             <b>@leaderboardLastSevenDays[2].Initials</b>
                                         </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardLastSevenDays[2].NameToDisplay, 13))<br />
                                     @leaderboardLastSevenDays[2].LastSevenDaysStepCount
@@ -86,23 +110,33 @@
                 @if (userInfo != null)
                 {
                     <!-- Ths section is available after login -->
-                    <div class="row pb-3 myrank thiswk">
-                        <!-- With Avatar -->
-                        @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
-                        <!-- No Avatar just user settings -->
-                        <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
-                        </div>
-                        <div class="col user-stats">
-                            <span>Rank:</span>@usersLast7DaysRank<br>
-                            <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
-                        </div>
-                        <div class="col user-settings">
-                            <a href="AddSteps" class="btn btn-link">
-                                <i class="fa fa-plus"></i>
-                            </a>
-                        </div>
+            <div class="row pb-3 myrank thiswk">
+                @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                {
+                    <!-- With Avatar -->
+                    <div class="col user-avatar">
+                        <a href="/UserProfile" class="stretched-link">
+                            <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                        </a>
                     </div>
+                }
+                else
+                {
+                    <!-- No Avatar just user settings -->
+                    <div class="col user-avatar">
+                        <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                    </div>
+                }
+                <div class="col user-stats">
+                    <span>Rank:</span>@usersLast7DaysRank<br>
+                    <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
+                </div>
+                <div class="col user-settings">
+                    <a href="AddSteps" class="btn btn-link">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+            </div>
                     <!-- end available after login -->
                 }
 
@@ -116,9 +150,16 @@
                                     <!-- This row as template for users without avatar - uses settings from user profile page -->
                                     <th class="align-middle" scope="row">@(index + 1)</th>
                                     <td class="align-middle">
-                                        <div class="md-avatar user-color rounded-circle size-1">
-                                            <b>@leaderboardLastSevenDays[index].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[index].ImageLink))
+                                        {
+                                            <img src=@leaderboardLastSevenDays[index].ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle size-1">
+                                                <b>@leaderboardLastSevenDays[index].Initials</b>
+                                            </div>
+                                        }
                                     </td>
                                     <td class="align-middle">@(Utilities.Truncate(leaderboardLastSevenDays[index].NameToDisplay, 17))</td>
                                     <td class="align-middle">@leaderboardLastSevenDays[index].LastSevenDaysStepCount</td>
@@ -146,9 +187,17 @@
                                 <div class="col-4 text-center runner-up">
                                     <div class="second">
                                         <span class="silver">2</span>
-                                        <div class="md-avatar user-color rounded-circle">
-                                            <b>@leaderboardAllTime[1].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardAllTime[1].ImageLink))
+                                        {
+                                            <img src=@leaderboardAllTime[1].ImageLink alt="Avatar"
+                                                 class="md-avatar rounded-circle">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle">
+                                                <b>@leaderboardAllTime[1].Initials</b>
+                                            </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardAllTime[1].NameToDisplay, 13))<br />
                                     @leaderboardAllTime[1].AllTimeStepCount
@@ -159,9 +208,17 @@
                                 <div class="col-4 text-center">
                                     <div class="first">
                                         <span class="gold">1</span>
-                                        <div class="md-avatar user-color rounded-circle size-2">
-                                            <b>@leaderboardAllTime[0].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardAllTime[0].ImageLink))
+                                        {
+                                            <img src=@leaderboardAllTime[0].ImageLink alt="Avatar"
+                                                 class="md-avatar rounded-circle size-2">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle size-2">
+                                                <b>@leaderboardAllTime[0].Initials</b>
+                                            </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardAllTime[0].NameToDisplay, 13))<br />
                                     @leaderboardAllTime[0].AllTimeStepCount
@@ -172,9 +229,17 @@
                                 <div class="col-4 text-center runner-up">
                                     <div class="third">
                                         <span class="bronze">3</span>
-                                        <div class="md-avatar user-color rounded-circle">
-                                            <b>@leaderboardAllTime[2].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardAllTime[2].ImageLink))
+                                        {
+                                            <img src=@leaderboardAllTime[2].ImageLink alt="Avatar"
+                                                 class="md-avatar rounded-circle">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle">
+                                                <b>@leaderboardAllTime[2].Initials</b>
+                                            </div>
+                                        }
                                     </div>
                                     @(Utilities.Truncate(leaderboardAllTime[2].NameToDisplay, 13))<br />
                                     @leaderboardAllTime[0].AllTimeStepCount
@@ -188,12 +253,22 @@
                 {
                     <!-- Ths section is available after login -->
                     <div class="row pb-3 myrank alltime">
-                        <!-- With Avatar -->
-                        @*<div class="col user-avatar"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(4).jpg" alt="Avatar" class="md-avatar rounded-circle size-1"></div>*@
-                        <!-- No Avatar just user settings -->
-                        <div class="col user-avatar">
-                            <div class="md-avatar user-color rounded-circle size-1"><a href="UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
-                        </div>
+                        @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                        {
+                            <!-- With Avatar -->
+                            <div class="col user-avatar">
+                                <a href="/UserProfile" class="stretched-link">
+                                    <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- No Avatar just user settings -->
+                            <div class="col user-avatar">
+                                <div class="md-avatar user-color rounded-circle size-1"><a href="UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                            </div>
+                        }
                         <div class="col user-stats">
                             <span>Rank:</span>@usersAllTimeRank<br>
                             <span>Steps:</span> @userInfo.AllTimeStepCount
@@ -217,9 +292,16 @@
                                     <!-- This row as template for users without avatar - uses settings from user profile page -->
                                     <th class="align-middle" scope="row">@(index + 1)</th>
                                     <td class="align-middle">
-                                        <div class="md-avatar user-color rounded-circle size-1">
-                                            <b>@leaderboardAllTime[index].Initials</b>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(leaderboardAllTime[index].ImageLink))
+                                        {
+                                            <img src=@leaderboardAllTime[index].ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                        }
+                                        else
+                                        {
+                                            <div class="md-avatar user-color rounded-circle size-1">
+                                                <b>@leaderboardAllTime[index].Initials</b>
+                                            </div>
+                                        }
                                     </td>
                                     <td class="align-middle">@(Utilities.Truncate(leaderboardAllTime[index].NameToDisplay, 17))</td>
                                     <td class="align-middle">@leaderboardAllTime[index].AllTimeStepCount</td>
@@ -260,6 +342,8 @@
 
     private LeaderboardData userInfo { get; set; }
 
+    private FlbUser user { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // Get the user Id
@@ -272,6 +356,8 @@
         if (authState.User.Identity.IsAuthenticated
             && !string.IsNullOrEmpty(userId))
         {
+            user = await userManager.FindByIdAsync(userId);
+
             usersLast7DaysRank
                 = await stepDataService.GetUsersRank(userId,
                 StepDataService.StepCountType.SevenDayStepCount);
@@ -282,21 +368,6 @@
 
             userInfo
                 = await stepDataService.GetUserLeaderboardInfo(userId);
-            if (userInfo == null)
-            {
-                userInfo = new LeaderboardData
-                {
-                    UserId = userId,
-                    NameToDisplay = authState.User.Identity.Name,
-                    Initials
-                        = stepDataService
-                        .ConvertNameToInitials(authState.User.Identity.Name),
-                    DailyStepCount = 0,
-                    LastSevenDaysStepCount = 0,
-                    LastThirtyDaysStepCount = 0,
-                    AllTimeStepCount = 0
-                };
-            }
         }
 
         // Get the leaderboard for the last 7 days

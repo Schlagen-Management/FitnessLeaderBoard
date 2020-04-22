@@ -5,6 +5,7 @@
 @using FitnessLeaderBoard.Components
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
 
 @inject StepDataService stepDataService
 @inject UserManager<FlbUser> userManager
@@ -23,14 +24,16 @@
         <!-- end left ad block -->
     </div>
     <div class="col-sm-4 offset-sm-1">
+        <div class="text-info text-center">Note there can only be one entry per day</div><br />
         <div class="user-profile">
             <EditForm Model="@userInput" OnValidSubmit="@AddUserSteps">
                 <DataAnnotationsValidator />
+                <label class="text-danger">@ServerValidationMessage</label>
 
                 <div class="form-group">
                     <label for="selectDay">Select Day</label>
-                    <InputSelectNumber id="selectDay" class="form-control"
-                                       @bind-Value="@userInput.SelectedDay">
+                    <InputSelectNumber T="int" id="selectDay" class="form-control"
+                                       @bind-Value=@userInput.SelectedDay>
                         <option value="-1">Yesterday</option>
                         <option value="0" selected>Today</option>
                     </InputSelectNumber>
@@ -85,6 +88,8 @@
     private StepInputModel userInput { get; set; }
         = new StepInputModel { SelectedDay = 0, StepsTaken = 0 };
 
+    private string ServerValidationMessage { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // Get the user Id
@@ -95,16 +100,14 @@
 
         // If the user is authenticated, retrieve info
         if (authState.User.Identity.IsAuthenticated
-            && !string.IsNullOrEmpty(userId))
-        {
-        }
+            && !string.IsNullOrEmpty(userId)) { }
     }
 
     private async Task AddUserSteps()
     {
         DateTime date = DateTime.Today.AddDays(userInput.SelectedDay).Date;
 
-        if (await stepDataService.AddUserStepDataForDate(userId, date, userInput.StepsTaken))
+        if (string.IsNullOrEmpty(ServerValidationMessage = await stepDataService.AddUserStepDataForDate(userId, date, userInput.StepsTaken)))
         {
             // Navigate back to the home page
             navigationManager.NavigateTo("/", true);

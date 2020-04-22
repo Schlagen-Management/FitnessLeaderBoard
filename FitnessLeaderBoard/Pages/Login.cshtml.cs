@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FitnessLeaderBoard.Data.EntityClasses;
+using FitnessLeaderBoard.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ namespace FitnessLeaderBoard.Pages
         private readonly SignInManager<FlbUser> _signInManager;
         private readonly UserManager<FlbUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly StepDataService _stepDataService;
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -44,11 +46,13 @@ namespace FitnessLeaderBoard.Pages
         public LoginModel(
             SignInManager<FlbUser> signInManager,
             UserManager<FlbUser> userManager,
-            ILogger<LoginModel> logger)
+            ILogger<LoginModel> logger,
+            StepDataService stepDataService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            _stepDataService = stepDataService;
         }
 
         public IActionResult OnGetAsync(string provider, string returnUrl = null)
@@ -90,6 +94,10 @@ namespace FitnessLeaderBoard.Pages
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+
+                // Update the users image link
+                await UpdateUsersImageLink(info);
+
                 return LocalRedirect(returnUrl);
             }
             else
@@ -141,9 +149,38 @@ namespace FitnessLeaderBoard.Pages
                 }
             }
 
+            // Get the users image link
+            await UpdateUsersImageLink(info);
+
             LoginProvider = info.LoginProvider;
             ReturnUrl = returnUrl;
             return Page();
+        }
+
+        protected async Task UpdateUsersImageLink(ExternalLoginInfo info)
+        {
+            var user
+                = await _userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+
+            // Update the picture link
+            switch (info.LoginProvider)
+            {
+                case "Google":
+                    user.ImageLink
+                        = info.Principal.FindFirstValue("urn:google:image");
+                    break;
+                case "Facebook":
+                    var identifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                    user.ImageLink
+                        = !string.IsNullOrEmpty(identifier)
+                        ? string.Format("https://graph.facebook.com/{0}/picture", identifier)
+                        : string.Empty;
+                    break;
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            await _stepDataService.UpdateUserInfoInLeaderboard(user);
         }
     }
 }

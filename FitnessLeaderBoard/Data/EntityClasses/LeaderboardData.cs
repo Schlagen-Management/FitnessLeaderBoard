@@ -10,6 +10,7 @@ namespace FitnessLeaderBoard.Data.EntityClasses
         public int LeaderboardId { get; set; }
         public string UserId { get; set; }
         public string NameToDisplay { get; set; }
+        public string ImageLink { get; set; }
         public string Initials { get; set; }
         public int DailyStepCount { get; set; }
         public int LastSevenDaysStepCount { get; set; }

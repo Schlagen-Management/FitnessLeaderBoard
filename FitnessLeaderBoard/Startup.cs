@@ -19,6 +19,7 @@ using FitnessLeaderBoard.Data.EntityClasses;
 using FitnessLeaderBoard.Services;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
 
 namespace FitnessLeaderBoard
 {
@@ -52,12 +53,15 @@ namespace FitnessLeaderBoard
             {
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                options.Scope.Add("public_profile");
+                options.Fields.Add("picture");
                 options.CallbackPath = "/signin-facebook";
             })
             .AddGoogle(options =>
             {
                 options.ClientId = Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                options.ClaimActions.MapJsonKey("urn:google:image", "picture");
                 options.CallbackPath = "/signin-google";
             }); ;
 

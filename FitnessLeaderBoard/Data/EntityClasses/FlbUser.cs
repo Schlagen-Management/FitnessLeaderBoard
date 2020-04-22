@@ -12,5 +12,6 @@ namespace FitnessLeaderBoard.Data.EntityClasses
         public string FullName { get; set; }
         [PersonalData]
         public string DisplayName { get; set; }
+        public string ImageLink { get; set; }
     }
 }

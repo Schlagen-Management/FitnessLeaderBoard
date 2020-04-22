@@ -48,6 +48,9 @@ namespace FitnessLeaderBoard.Pages
 
             [Display(Name = "Display Name")]
             public string DisplayName { get; set; }
+
+            [Display(Name = "Profile Image")]
+            public string ImageLink { get; set; }
         }
 
         private async Task LoadAsync(FlbUser user)
@@ -56,6 +59,7 @@ namespace FitnessLeaderBoard.Pages
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var fullName = user.FullName;
             var displayName = user.DisplayName;
+            var imageLink = user.ImageLink;
 
             Username = userName;
 
@@ -63,7 +67,8 @@ namespace FitnessLeaderBoard.Pages
             {
                 //PhoneNumber = phoneNumber,
                 FullName = user.FullName,
-                DisplayName = user.DisplayName
+                DisplayName = user.DisplayName,
+                ImageLink = user.ImageLink
             };
         }
 
