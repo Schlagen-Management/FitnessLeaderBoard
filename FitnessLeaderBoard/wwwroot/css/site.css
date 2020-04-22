@@ -133,6 +133,10 @@ hr {
     background-color: #066;
 }
 
+.privacy-tos, .privacy-tos .btn-link {
+    font-size: 0.7rem;
+}
+
 a.user-link-alt {
     color: #d0d0d0;
     text-decoration: none;
