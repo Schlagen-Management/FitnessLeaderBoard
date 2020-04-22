@@ -47,7 +47,7 @@
                                         <span class="silver">2</span>
                                         @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[1].ImageLink))
                                         {
-                                            <img src=@leaderboardLastSevenDays[1].ImageLink alt="Avatar" 
+                                            <img src=@leaderboardLastSevenDays[1].ImageLink alt="Avatar"
                                                  class="md-avatar rounded-circle">
                                         }
                                         else
@@ -57,7 +57,7 @@
                                             </div>
                                         }
                                     </div>
-                                    @(Utilities.Truncate(leaderboardLastSevenDays[1].NameToDisplay, 13))<br/>
+                                    @(Utilities.Truncate(leaderboardLastSevenDays[1].NameToDisplay, 13))<br />
                                     @leaderboardLastSevenDays[1].LastSevenDaysStepCount
                                 </div>
                             }
@@ -68,7 +68,7 @@
                                         <span class="gold">1</span>
                                         @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[0].ImageLink))
                                         {
-                                            <img src=@leaderboardLastSevenDays[0].ImageLink alt="Avatar" 
+                                            <img src=@leaderboardLastSevenDays[0].ImageLink alt="Avatar"
                                                  class="md-avatar rounded-circle size-2">
                                         }
                                         else
@@ -90,13 +90,13 @@
                                         @if (!string.IsNullOrEmpty(leaderboardLastSevenDays[2].ImageLink))
                                         {
                                             <img src=@leaderboardLastSevenDays[2].ImageLink alt="Avatar"
-                                                 class="md-avatar rounded-circle">                                       
+                                                 class="md-avatar rounded-circle">
                                         }
                                         else
                                         {
-                                        <div class="md-avatar user-color rounded-circle">
-                                            <b>@leaderboardLastSevenDays[2].Initials</b>
-                                        </div>
+                                            <div class="md-avatar user-color rounded-circle">
+                                                <b>@leaderboardLastSevenDays[2].Initials</b>
+                                            </div>
                                         }
                                     </div>
                                     @(Utilities.Truncate(leaderboardLastSevenDays[2].NameToDisplay, 13))<br />
@@ -110,34 +110,36 @@
                 @if (userInfo != null)
                 {
                     <!-- Ths section is available after login -->
-            <div class="row pb-3 myrank thiswk">
-                @if (!string.IsNullOrEmpty(userInfo.ImageLink))
-                {
-                    <!-- With Avatar -->
-                    <div class="col user-avatar">
-                        <a href="/UserProfile" class="stretched-link">
-                            <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
-                        </a>
+                    <div class="row pb-3 myrank thiswk">
+                        @if (!string.IsNullOrEmpty(userInfo.ImageLink))
+                        {
+                            <!-- With Avatar -->
+                            <div class="col user-avatar">
+                                <a href="/UserProfile" class="stretched-link">
+                                    <img src=@userInfo.ImageLink alt="Avatar" class="md-avatar rounded-circle size-1">
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- No Avatar just user settings -->
+                            <div class="col user-avatar">
+                                <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
+                            </div>
+                        }
+                        <div class="col user-stats">
+                            <span>Rank:</span>@usersLast7DaysRank<br>
+                            <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
+                        </div>
+                        <div class="col user-settings">
+                            <a href="AddSteps" class="btn btn-link">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <!-- No Avatar just user settings -->
-                    <div class="col user-avatar">
-                        <div class="md-avatar user-color rounded-circle size-1"><a href="/UserProfile" class="stretched-link"><b>@userInfo.Initials</b></a></div>
-                    </div>
-                }
-                <div class="col user-stats">
-                    <span>Rank:</span>@usersLast7DaysRank<br>
-                    <span>Steps:</span> @userInfo.LastSevenDaysStepCount<br />
-                </div>
-                <div class="col user-settings">
-                    <a href="AddSteps" class="btn btn-link">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </div>
-            </div>
                     <!-- end available after login -->
+
+                    <!-- Insert tutorial modal here -->
                 }
 
                 @if (leaderboardLastSevenDays != null && leaderboardLastSevenDays.Count() > 3)
