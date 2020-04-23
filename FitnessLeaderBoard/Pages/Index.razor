@@ -11,14 +11,14 @@
 @inject ILogger<Index> logger
 
 <div class="row">
-    <div class="col-sm-4 offset-sm-4">
+    <div class="col-sm-6 offset-sm-3">
         <AuthorizeView>
             <Authorized>
                 <div class="row">
-                    <div class="col-9 text-center">
+                    <div class="col-10 pr-0">
                         <h1 class="h4 my-2">Fitness Leaderboard</h1>
                     </div>
-                    <div class="col-3 text-center"><a href="/UserProfile" class="user-link-alt stretched-link"><i class="fa fa-2x fa-user-circle-o"></i></a></div>
+                    <div class="col-2 px-0 text-center"><a href="/UserProfile" class="user-link-alt stretched-link"><i class="fa fa-2x fa-user-circle-o"></i></a></div>
                 </div>
             </Authorized>
             <NotAuthorized>
@@ -38,7 +38,7 @@
         <AdBlockA />
         <!-- end left ad block -->
     </div>
-    <div class="col-sm-4 offset-sm-1">
+    <div class="col-sm-6">
         <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="true">THIS WEEK</a> </li>
             <li class="nav-item"> <a class="nav-link" id="pills-alltime-tab" data-toggle="pill" href="#pills-alltime" role="tab" aria-controls="pills-alltime" aria-selected="false">ALL TIME</a> </li>
@@ -47,7 +47,7 @@
             <div class="tab-pane fade show active" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab">
                 @if (leaderboardLastSevenDays == null || leaderboardLastSevenDays.Count() == 0)
                 {
-                    <div class="mt-5 text-center">
+                    <div class="mt-5 mb-3 text-center">
                         No walkers currently registered
                     </div>
                 }
@@ -195,7 +195,7 @@
             <div class="tab-pane fade" id="pills-alltime" role="tabpanel" aria-labelledby="pills-alltime-tab">
                 @if (leaderboardAllTime == null || leaderboardAllTime.Count() == 0)
                 {
-                    <div class="mt-5 text-center">
+                    <div class="mt-5 mb-3 text-center">
                         No walkers currently registered
                     </div>
                 }
@@ -341,7 +341,7 @@
         </div>
         <FitnessLeaderBoard.Components.LoginComponent />
     </div>
-    <div class="col-sm-3 offset-sm-1">
+    <div class="col-sm-3">
         <!-- Right ad block visible on tablets and up -->
         <AdBlockB />
         <!-- end right ad block-->
