@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\ad-images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Shared\AdBlockA.razor">
