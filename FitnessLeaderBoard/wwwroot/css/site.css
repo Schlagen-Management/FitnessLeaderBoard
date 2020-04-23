@@ -63,6 +63,12 @@ h1.h4 {
     height: calc(100vh - 345px);
 }
 
+@media screen and (orientation:landscape) {
+    .tab-content {
+        height: 88%;
+    }
+}
+
 p small {
     line-height: 1;
 }
