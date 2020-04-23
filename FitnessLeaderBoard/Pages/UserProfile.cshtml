@@ -8,7 +8,7 @@
     <div class="col">
         <div class="text-center">
             <img src=@Model.Input.ImageLink alt="Avatar"
-                 class="md-avatar rounded-circle size-4">
+                 class="md-avatar rounded-circle size-4" style="display:inline-flex;">
         </div>
         <form id="profile-form" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -29,7 +29,7 @@
         </form>
     </div>
 </div>
-<div class="text-center align-self-end privacy-tos"><a href="~/Privacy" class="btn btn-link">Privacy Policy</a> | <a href="~/ToS" class="btn btn-link">Terms of Service</a></div>
+<div class="text-center mt-2 privacy-tos"><a href="~/Privacy" class="btn btn-link">Privacy Policy</a> | <a href="~/ToS" class="btn btn-link">Terms of Service</a></div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
