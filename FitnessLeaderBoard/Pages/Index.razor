@@ -11,7 +11,7 @@
 @inject ILogger<Index> logger
 
 <div class="row">
-    <div class="col-sm-6 offset-sm-3">
+    <div class="col-sm-6 offset-sm-3 col-lg-4 offset-lg-4">
         <AuthorizeView>
             <Authorized>
                 <div class="row">
@@ -339,7 +339,6 @@
                 }
             </div>
         </div>
-        <FitnessLeaderBoard.Components.LoginComponent />
     </div>
     <div class="col-sm-3">
         <!-- Right ad block visible on tablets and up -->
@@ -350,6 +349,11 @@
     </div>
     <!-- Ad rotator space visible on phones only -->
     <MobileAdRotator />
+</div>
+<div class="row">
+    <div class="col-sm-6 offset-sm-3">
+        <FitnessLeaderBoard.Components.LoginComponent />
+    </div>
 </div>
 
 @code {
