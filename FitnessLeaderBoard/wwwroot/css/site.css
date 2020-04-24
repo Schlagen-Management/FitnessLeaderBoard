@@ -91,6 +91,7 @@ hr {
     min-height: 50px;
     background-color: #333;
     color: #dcdcdc;
+    z-index: 99999;
 }
 
 .md-avatar {
@@ -278,9 +279,9 @@ a.user-link-alt {
 .bronze {
     background-color: #cd7f32;
 }
-/* Sign in page */
+/* Login component */
 .login-form {
-    padding: 0;
+    padding: 0 0 4rem;
 }
 
     .login-form .signin-title {
