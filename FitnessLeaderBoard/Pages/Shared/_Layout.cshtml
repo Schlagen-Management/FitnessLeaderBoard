@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.ViewEngines
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
-@{ 
+@{
     Layout = null;
 }
 
@@ -18,10 +18,10 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="css/site.css" />
     @*<meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FitnessLeaderBoard</title>
-    <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Identity/css/site.css" />*@
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - FitnessLeaderBoard</title>
+        <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/Identity/css/site.css" />*@
 </head>
 <body>
     @*<header>
@@ -67,49 +67,33 @@
             <div class="row">
                 <div class="col-sm-3">
                     <!-- Left ad block visible on tablets and up -->
-                    <div class="advertisement pt-3 d-none d-sm-block" id="advertisement">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                            </div>
-                        </div>
-                    </div>
+                    <AdBlockA />
                     <!-- end left ad block -->
                 </div>
-                <div class="col-sm-4 offset-sm-1">
+                <div class="col-sm-6">
                     @RenderBody()
                 </div>
-                <div class="col-sm-3 offset-sm-1">
+                <div class="col-sm-3">
                     <!-- Right ad block visible on tablets and up -->
-                    <div class="advertisement pt-3 d-none d-sm-block" id="advertisement">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                                <div class="card mb-4"> <img src="https://via.placeholder.com/300x250?text=300x250+AD" class="card-img-top" alt="Placeholder Ad"> </div>
-                            </div>
-                        </div>
-                    </div>
+                    <AdBlockB />
                     <!-- end right ad block-->
-                    <!-- Ad space visible on phones only - we could rotate ads on screen changes or on a timer -->
-                    <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div>
                 </div>
+                <!-- Ad rotator space visible on phones only -->
+                <MobileAdRotator />
             </div>
         </div>
     </div>
 
     @*<div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-    <footer class="footer border-top text-muted">
-        <div class="container">
-            &copy; 2020 - FitnessLeaderBoard - <a asp-area="" asp-page="Privacy">Privacy</a>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>*@
+        <footer class="footer border-top text-muted">
+            <div class="container">
+                &copy; 2020 - FitnessLeaderBoard - <a asp-area="" asp-page="Privacy">Privacy</a>
+            </div>
+        </footer>*@
 
     <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
