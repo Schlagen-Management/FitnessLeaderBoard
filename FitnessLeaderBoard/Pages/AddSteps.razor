@@ -56,12 +56,15 @@
             </EditForm>
         </div>
     </div>
-    <div class="col-sm-3 offset-sm-1">
+    <div class="col-sm-3">
         <!-- Right ad block visible on tablets and up -->
-        <AdBlockA />
+        <AdBlockB />
         <!-- end right ad block-->
-        <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div>
+        <!-- Ad space visible on phones only - we could rotate ads on screen changes or on a timer -->
+        <!-- <div class="mobile-advertisement text-center d-block d-sm-none" id="mobile-advertisement"> <img src="https://via.placeholder.com/320x50?text=320x50+AD" alt="Placeholder Ad"> </div> -->
     </div>
+    <!-- Ad rotator space visible on phones only -->
+    <MobileAdRotator />
 </div>
 
 @code {
