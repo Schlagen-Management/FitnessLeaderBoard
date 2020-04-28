@@ -291,6 +291,10 @@ a.user-link-alt {
         letter-spacing: 1px;
     }
 
+    .login-form .col-6:first-of-type .btn {
+        float: right;
+    }
+
 .form-control,
 .social-btn .btn {
     min-height: 38px;
@@ -298,6 +302,7 @@ a.user-link-alt {
 }
 
 .social-btn .btn {
+    width: 135px;
     margin: 0;
     font-size: 15px;
     text-align: left;
