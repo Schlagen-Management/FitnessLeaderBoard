@@ -209,7 +209,7 @@ namespace FitnessLeaderBoard.Services
             var initials
                 = ConvertNameToInitials(nameToDisplay);
             var imageLink
-                = user.ImageLink;
+                = user != null ? user.ImageLink : string.Empty;
 
             if (leaderBoardInfo == null)
             {
@@ -256,6 +256,7 @@ namespace FitnessLeaderBoard.Services
 
         public string ConvertNameToInitials(string name)
         {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
 
             // Compute the initials
             List<string> allInitials
@@ -279,6 +280,8 @@ namespace FitnessLeaderBoard.Services
 
         public string GetNameToDisplay(FlbUser user)
         {
+            if (user == null) return string.Empty;
+
             // Display name precedence: DisplayName -> Full Name -> email address
             var nameToDisplay
                 = !string.IsNullOrEmpty(user.DisplayName)
